@@ -1,0 +1,157 @@
+ 
+ACCEDA 
+Brand  Guide 
+Accessibility.  Automated. 
+ 
+AI-Powered  Accessibility  Compliance 
+Build  Accessible.  Ship  Confidently. 
+ 
+
+  Elevator  Pitch 
+ 
+ACCEDA  is  an  AI-powered  accessibility  platform  that  scans,  fixes,  and  verifies  WCAG  compliance  automatically  —  helping  developers  ship  accessible  software  with  confidence. 
+ 
+  Brand  Themes 
+ 
+Accessibility AI  Assistance Compliance  &  Trust 
+Modern  Dev  Tooling 
+ 
+  Logo  System 
+ 
+Primary  Logo 
+ Signal  waves  +  checkmark  symbolizing  accessibility  signals  detected  and  validated. Use  cases: •  Website  header •  Product  UI •  Marketing 
+Icon  Mark Signal  +  check  only. Use  cases: •  Favicon •  Mobile  apps •  GitHub  org •  CLI  tools  Monochrome  Version •  Navy •  White Use  cases: •  Dark  mode  UI •  Print •  Watermark 
+ 
+ 
+ 
+ 
+ 
+ 
+
+  Color  System 
+ 
+Primary  Colors 
+ Deep  Accessibility  Blue #0A2A66 
+ Signal  Blue #1F4FD8 
+ Trust  Navy #0C1F4A 
+ Validation  Green #10B26C 
+ 
+Accent  Colors 
+ Electric  Blue #3A7BFF 
+ Accessibility  Yellow #FFC247 
+ Soft  Gray #F4F6F8 
+ UI  Gray #6B7280 
+ 
+ 
+  Typography 
+ 
+Primary  Font 
+Inter Weights:  Regular  400,  Medium  500,  SemiBold  600,  Bold  700 •  Body  text •  UI  elements •  Buttons 
+Secondary  Font 
+Space  Grotesk Display  &  marketing  typeface •  Landing  page  headers •  Marketing  graphics 
+Code  Font 
+JetBrains  Mono Monospaced  developer  typeface •  CLI  examples •  Documentation •  Developer  dashboards 
+ 
+ 
+ 
+ 
+ 
+  UI  Design  Language 
+ 
+Design  Principles 
+Clean Minimal  interfaces  with  purposeful  whitespace  and  clear  hierarchy. 
+Developer-First Built  for  engineering  workflows,  CLI  tools,  and  code-centric  experiences. 
+Fast Optimized  for  speed  —  both  performance  and  time-to-insight  for  users. 
+ 
+Button  Styles 
+  Primary     Background:  #1F4FD8  |  Text:  White  |  Border  radius:  8px
+ 
+  Success     Background:  #10B26C  |  Text:  White  |  Border  radius:  8px
+ 
+  Outline     Border:  1px  solid  #1F4FD8  |  Text:  #1F4FD8  |  Border  radius:  8px
+ 
+ 
+  Icon  System 
+ 
+Style  Guidelines •  Outline  icons •  2px  stroke •  Rounded  corners 
+Core  Icon  Set •  Signal  +  Check •  Eye •  Code  Brackets •  Shield •  Graph •  Lightning 
+ 
+  Product  Dashboard 
+ 
+Accessibility  Score  Card  Example 
+94  /  100 Score 
+3 WCAG  Issues 
+27 Auto-Fixed 
+2 Remaining 
+Cards  use  subtle  shadows,  rounded  corners,  and  a  clean  white/light  background  to  communicate  trust  
+and
+ 
+clarity
+ 
+at
+ 
+a
+ 
+glance. 
+ 
+  Brand  Voice 
+ 
+Clear Communicate  without  jargon.  Every  message  should  be  immediately  understood. 
+Technical Respect  the  developer  audience.  Use  precise  language  and  real  examples. 
+Trustworthy Every  claim  is  backed  by  evidence.  Compliance  is  not  guesswork. 
+Helpful Meet  users  where  they  are.  Provide  actionable  guidance,  not  just  reports. 
+ 
+Example  copy: Automatically  detect  and  fix  accessibility  issues. 
+ 
+  Taglines  &  Messaging 
+ Primary Accessibility.  Automated. Secondary AI-Powered  Accessibility  Compliance Marketing Build  Accessible.  Ship  Confidently. Developer Accessibility  CI  for  modern  teams Hero  Headline Build  Accessible  Software  Automatically Sub-Headline AI  scans,  fixes,  and  verifies  accessibility  across  your  entire  product  stack. Social  /  GitHub  Banner 
+AI-Powered  Accessibility  Compliance  —  Scan.  Fix.  Verify. 
+ 
+  Product  Naming 
+ 
+ACCEDA  Scan Automated  scanning  for  accessibility  issues.
+ 
+ACCEDA  Fix AI-powered  auto-remediation  engine.
+ 
+ACCEDA  CI Continuous  integration  pipeline  integration.
+ 
+ACCEDA  Reports Compliance  reporting  and  WCAG  dashboards.
+ 
+ACCEDA  DevKit SDK  and  tooling  for  developer  workflows.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  Illustration  &  Animation 
+ 
+Illustration  Style Illustrations  should  be: •  Minimal •  Geometric •  Accessibility  friendly  Examples: •  Screen  reader  scanning  website •  AI  reviewing  UI •  Code  auto-fixes 
+Motion  /  Animation Key  animation  patterns: •  Signal  scanning  animation •  Checkmark  draw  animation •  Dashboard  score  count-up 
+ 
+  Website  Layout 
+ 
+Page  Sections 
+Hero
+ How  it  Works
+ Dev  Integration
+ A11y  Reports
+ Compliance
+ Pricing
+ 
+ 
+  Favicon  &  Social  Branding 
+ 
+Favicon Signal  +  check  icon  mark,  rendered  at  16x16,  32x32,  and  64x64.  Use  navy  on  white  or  white  on  navy  for  maximum  contrast. 
+Social  /  GitHub  Banner Headline:  AI-Powered  Accessibility  Compliance Sub-copy:  Scan.  Fix.  Verify. Use  Signal  Blue  background  with  white  text  and  Validation  Green  accents. 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ACCEDA   —   Accessibility.  Automated. Build  Accessible.  Ship  Confidently. 
+ 
