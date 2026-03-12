@@ -589,39 +589,44 @@ export default function AccedaLandingPage() {
         borderBottomColor: navScrolled ? "var(--border)" : "transparent",
         background: navScrolled ? "rgba(8,12,20,0.92)" : "transparent",
       }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: "100%", height: 68 }}>
-          <a href="#" className="nav-logo" onClick={() => setMobileMenuOpen(false)}>
-            <Image src={accedaLogo} alt="Acceda Logo" height={55} priority style={{ width: "auto" }} />
-          </a>
-          <button className="mobile-menu-btn" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-              {mobileMenuOpen ? <path d="M18 6L6 18M6 6l12 12" /> : <path d="M4 6h16M4 12h16M4 18h16" />}
-            </svg>
-          </button>
-        </div>
-        
+        {/* Logo */}
+        <a href="#" className="nav-logo" onClick={() => setMobileMenuOpen(false)}>
+          <Image src={accedaLogo} alt="Acceda Logo" height={55} priority style={{ width: "auto" }} />
+        </a>
+
+        {/* Desktop links — center */}
         <ul className={`nav-links ${mobileMenuOpen ? 'open' : ''}`}>
           {[
             { label: "Platform",   href: "#platform" },
             { label: "Use Cases",  href: "#use-cases" },
             { label: "Compliance", href: "#compliance" },
             { label: "Pricing",    href: "#cta" },
-            { label: "Docs",       href: "#" },  // leave for later
+            { label: "Docs",       href: "#" },
           ].map(l => (
-            <li key={l.label}><a href={l.href} onClick={() => setMobileMenuOpen(false)}>{l.label}</a></li>
+            <li key={l.label}>
+              <a href={l.href} onClick={() => setMobileMenuOpen(false)}>{l.label}</a>
+            </li>
           ))}
         </ul>
+
+        {/* CTA buttons — right */}
         <div className={`nav-cta ${mobileMenuOpen ? 'open' : ''}`}>
           <a href="#cta" className="btn-ghost">Sign Up</a>
-          <a href="https://cal.com/acceda/demo" 
-             target="_blank" 
-             rel="noopener noreferrer"
-             className="btn-primary">
+          <a href="https://cal.com/acceda/demo"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-primary">
             Request Demo <IconArrow />
           </a>
         </div>
-      </nav>
 
+        {/* Mobile toggle — only visible on small screens */}
+        <button className="mobile-menu-btn" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+            {mobileMenuOpen ? <path d="M18 6L6 18M6 6l12 12" /> : <path d="M4 6h16M4 12h16M4 18h16" />}
+          </svg>
+        </button>
+      </nav>
       {/* ── Hero ─────────────────────────────────────────────────── */}
       <section style={{ position: "relative", overflow: "hidden", paddingTop: 160, paddingBottom: 120 }}>
         <div className="grid-bg" />
@@ -655,7 +660,7 @@ export default function AccedaLandingPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
               >
-                <span style={{ color: "var(--green)" }}>USE</span>ACCEDA<br/>
+                <span style={{ color: "var(--teal)" }}>USE</span>ACCEDA<br/>
                 <span style={{ color: "var(--blue)" }}>Build Accessible</span><br/>
                 Software Automatically
               </motion.h1>
