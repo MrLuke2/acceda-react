@@ -655,9 +655,9 @@ export default function AccedaLandingPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
               >
-                Acceda<br/>
-                <span style={{ color: "var(--blue)" }}>Build Towards a</span><br/>
-                Risk-Free Future
+                <span style={{ color: "var(--green)" }}>USE</span>ACCEDA<br/>
+                <span style={{ color: "var(--blue)" }}>Build Accessible</span><br/>
+                Software Automatically
               </motion.h1>
 
               <motion.p
