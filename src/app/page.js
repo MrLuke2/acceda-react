@@ -653,7 +653,7 @@ export default function AccedaLandingPage() {
               <motion.h1
                 style={{
                   fontFamily: "var(--font-display)", fontWeight: 800,
-                  fontSize: "clamp(40px,5vw,68px)", lineHeight: 1.0,
+                  fontSize: "clamp(32px,4vw,56px)", lineHeight: 1.0,
                   letterSpacing: "-0.04em", color: "var(--white)", marginBottom: 28,
                 }}
                 initial={{ opacity: 0, y: 30 }}
@@ -662,7 +662,7 @@ export default function AccedaLandingPage() {
               >
                 <span style={{ color: "var(--teal)" }}>USE</span>ACCEDA<br/>
                 <span style={{ color: "var(--blue)" }}>Build Accessible</span><br/>
-                Software Automatically
+                Software Automation
               </motion.h1>
 
               <motion.p
