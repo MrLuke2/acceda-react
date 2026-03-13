@@ -2,209 +2,249 @@
 
 import DemoForm from "@/components/DemoForm";
 import { useState, useEffect, useRef } from "react";
-import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import { motion, AnimatePresence, useInView, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion";
 import Image from "next/image";
 import accedaLogo from "./acceda_logo_2.svg";
 
-// ─── Google Fonts ───────────────────────────────────────────────────────────
+// ─── Full Brand Token System ─────────────────────────────────────────────────
+// Based on ACCEDA Brand Guide v1.0
 const FontLoader = () => (
   <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=JetBrains+Mono:wght@400;500&display=swap');
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:        #0C1F4A;
-      --bg-2:      #0A2A66;
-      --bg-card:   rgba(10,42,102,0.6);
-      --border:    rgba(255,255,255,0.07);
-      --border-hi: rgba(31,79,216,0.35);
-      --blue:      #1F4FD8;
-      --blue-dim:  rgba(31,79,216,0.12);
-      --teal:      #10B26C;
-      --teal-dim:  rgba(16,178,108,0.10);
-      --white:     #FFFFFF;
-      --gray-1:    #F1F5F9;
-      --gray-2:    #94A3B8;
-      --gray-3:    #475569;
-      --red:       #FF4D6A;
-      --amber:     #FFAA2C;
+      /* ── Brand Core ── */
+      --navy:          #0A2A66;   /* Deep Accessibility Blue */
+      --signal:        #1F4FD8;   /* Signal Blue */
+      --trust:         #0C1F4A;   /* Trust Navy */
+      --green:         #10B26C;   /* Validation Green */
+      --electric:      #3A7BFF;   /* Electric Blue */
+      --yellow:        #FFC247;   /* Accessibility Yellow */
+      --soft-gray:     #F4F6F8;   /* Soft Gray — light sections */
+      --ui-gray:       #6B7280;   /* UI Gray */
+
+      /* ── Semantic surface tokens ── */
+      --surface-dark:    #0C1F4A;
+      --surface-darker:  #080E22;
+      --surface-card:    rgba(10,42,102,0.55);
+      --surface-card-hi: rgba(31,79,216,0.08);
+      --surface-light:   #F4F6F8;
+      --surface-white:   #FFFFFF;
+      --surface-cream:   #F8FAFF;
+
+      /* ── Semantic accent tokens ── */
+      --accent-primary:  #1F4FD8;   /* Signal Blue — interactive */
+      --accent-action:   #10B26C;   /* Green — success / CTA */
+      --accent-urgency:  #FFC247;   /* Yellow — deadlines / alerts */
+      --accent-electric: #3A7BFF;   /* Electric — hover / depth */
+      --accent-red:      #FF4D6A;   /* Error / critical */
+      --accent-amber:    #FFAA2C;   /* Warning */
+
+      /* ── Border tokens ── */
+      --border:          rgba(255,255,255,0.07);
+      --border-hi:       rgba(31,79,216,0.35);
+      --border-light:    #E2E8F0;
+      --border-yellow:   rgba(255,194,71,0.4);
+
+      /* ── Text tokens ── */
+      --text-primary:    #FFFFFF;
+      --text-secondary:  #94A3B8;
+      --text-muted:      #475569;
+      --text-dark:       #0F1729;
+      --text-dark-sub:   #374151;
+
+      /* ── Dim / alpha tokens ── */
+      --blue-dim:        rgba(31,79,216,0.12);
+      --green-dim:       rgba(16,178,108,0.10);
+      --yellow-dim:      rgba(255,194,71,0.10);
+      --electric-dim:    rgba(58,123,255,0.12);
+      --red-dim:         rgba(255,77,106,0.10);
+
+      /* ── Typography ── */
       --font-display: 'Space Grotesk', sans-serif;
-      --font-body:    'Inter', sans-serif;
-      --font-code:    'JetBrains Mono', monospace;
+      --font-body:    'DM Sans', sans-serif;
+      --font-mono:    'JetBrains Mono', monospace;
     }
 
+    /* ── Reduced motion ── */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    /* ── Skip link ── */
+    .skip-link {
+      position: absolute; top: -9999px; left: 0; z-index: 9999;
+      padding: 12px 24px; background: var(--navy); color: #fff;
+      font-weight: 600; text-decoration: none;
+      border-radius: 0 0 6px 6px; font-family: var(--font-body);
+    }
+    .skip-link:focus { top: 0; }
+
+    /* ── Focus rings ── */
+    *:focus-visible {
+      outline: 2px solid var(--green) !important;
+      outline-offset: 3px;
+    }
+
+    ::placeholder { color: var(--ui-gray); opacity: 1; }
     html { scroll-behavior: smooth; scroll-padding-top: 80px; }
 
     body {
-      background: var(--bg);
-      color: var(--white);
+      background: var(--surface-dark);
+      color: var(--text-primary);
       font-family: var(--font-body);
       -webkit-font-smoothing: antialiased;
+      line-height: 1.6;
     }
 
     /* ── Scrollbar ── */
     ::-webkit-scrollbar { width: 4px; }
-    ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 2px; }
+    ::-webkit-scrollbar-track { background: var(--surface-darker); }
+    ::-webkit-scrollbar-thumb { background: var(--signal); border-radius: 2px; }
 
-    /* ── Nav ── */
+    /* ─────────────────────── NAVIGATION ─────────────────────── */
     .nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       display: flex; align-items: center; justify-content: space-between;
       padding: 0 48px; height: 68px;
-      background: rgba(8,12,20,0.82);
-      backdrop-filter: blur(20px);
+      transition: background 0.3s, border-color 0.3s;
+    }
+    .nav.scrolled {
+      background: rgba(8,14,34,0.94);
+      backdrop-filter: blur(24px);
       border-bottom: 1px solid var(--border);
-      transition: border-color 0.3s;
     }
     .nav-logo {
       font-family: var(--font-display); font-size: 22px; font-weight: 800;
-      letter-spacing: -0.5px; color: var(--white); text-decoration: none;
+      letter-spacing: -0.5px; color: #fff; text-decoration: none;
       display: flex; align-items: center; gap: 10px;
     }
-    .nav-logo-mark {
-      width: 28px; height: 28px; border-radius: 7px;
-      background: var(--blue); display: grid; place-items: center;
-    }
-    .nav-links {
-      display: flex; gap: 32px; list-style: none;
-    }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
     .nav-links a {
-      font-size: 14px; font-weight: 400; color: var(--gray-2);
-      text-decoration: none; letter-spacing: 0.01em;
-      transition: color 0.2s;
+      font-family: var(--font-body); font-size: 14px; font-weight: 400;
+      color: var(--text-secondary); text-decoration: none; letter-spacing: 0.01em;
+      transition: color 0.2s; padding: 4px 0;
     }
-    .nav-links a:hover { color: var(--white); }
-    .nav-cta {
-      display: flex; align-items: center; gap: 12px;
-    }
+    .nav-links a:hover { color: #fff; }
+    .nav-cta { display: flex; align-items: center; gap: 12px; }
+
     .btn-ghost {
       font-family: var(--font-body); font-size: 14px; font-weight: 500;
-      color: var(--gray-2); background: transparent; border: none;
-      cursor: pointer; letter-spacing: 0.01em;
-      transition: color 0.2s; text-decoration: none; padding: 8px 4px;
+      color: var(--text-secondary); background: transparent; border: none;
+      cursor: pointer; text-decoration: none; padding: 8px 4px;
+      transition: color 0.2s;
     }
-    .btn-ghost:hover { color: var(--white); }
+    .btn-ghost:hover { color: #fff; }
+
     .btn-primary {
-      font-family: var(--font-body); font-size: 14px; font-weight: 500;
-      color: var(--white); background: var(--blue); border: none;
+      font-family: var(--font-body); font-size: 14px; font-weight: 600;
+      color: #fff; background: var(--signal); border: none;
       padding: 10px 20px; border-radius: 8px; cursor: pointer;
       letter-spacing: 0.01em; text-decoration: none;
-      transition: opacity 0.2s, transform 0.15s;
+      transition: background 0.2s, transform 0.15s;
       display: inline-flex; align-items: center; gap: 6px;
     }
-    .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
-    .btn-primary-lg {
-      font-size: 15px; padding: 14px 32px; border-radius: 10px;
-    }
+    .btn-primary:hover { background: var(--electric); transform: translateY(-1px); }
+
+    .btn-primary-lg { font-size: 15px; padding: 14px 32px; border-radius: 10px; }
+
     .btn-outline-lg {
       font-family: var(--font-body); font-size: 15px; font-weight: 500;
-      color: var(--blue); background: transparent;
-      border: 1.5px solid rgba(31,79,216,0.4);
+      color: rgba(255,255,255,0.8); background: transparent;
+      border: 1.5px solid rgba(255,255,255,0.18);
       padding: 13px 32px; border-radius: 10px; cursor: pointer;
-      letter-spacing: 0.01em; transition: border-color 0.2s, background 0.2s;
+      transition: border-color 0.2s, background 0.2s, color 0.2s;
       text-decoration: none;
     }
-    .btn-outline-lg:hover { border-color: var(--blue); background: var(--blue-dim); }
+    .btn-outline-lg:hover {
+      border-color: rgba(255,255,255,0.45);
+      background: rgba(255,255,255,0.06);
+      color: #fff;
+    }
 
-    /* ── Layout ── */
+    /* ─────────────────────── LAYOUT ─────────────────────── */
     .container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
 
-    /* ── Section headings ── */
+    /* ─────────────────────── SECTION TYPOGRAPHY ─────────────────────── */
     .eyebrow {
-      font-family: var(--font-body); font-size: 12px; font-weight: 500;
-      letter-spacing: 0.12em; text-transform: uppercase;
-      color: var(--teal); margin-bottom: 16px;
-      display: flex; align-items: center; gap: 8px;
+      font-family: var(--font-body); font-size: 11.5px; font-weight: 600;
+      letter-spacing: 0.13em; text-transform: uppercase;
+      color: var(--green); margin-bottom: 16px;
+      display: flex; align-items: center; gap: 10px;
     }
     .eyebrow::before {
-      content: ''; display: block; width: 20px; height: 1.5px;
-      background: var(--teal);
+      content: ''; display: block; width: 22px; height: 1.5px;
+      background: var(--green); flex-shrink: 0;
     }
+    .eyebrow.yellow { color: var(--yellow); }
+    .eyebrow.yellow::before { background: var(--yellow); }
+    .eyebrow.blue { color: var(--electric); }
+    .eyebrow.blue::before { background: var(--electric); }
+
     .section-title {
-      font-family: var(--font-display); font-size: clamp(32px,4vw,52px);
-      font-weight: 700; line-height: 1.1; letter-spacing: -0.03em;
-      color: var(--white);
+      font-family: var(--font-display); font-size: clamp(30px,4vw,52px);
+      font-weight: 700; line-height: 1.08; letter-spacing: -0.03em;
+      color: #fff;
     }
-    .section-title .accent { color: var(--blue); }
+    .section-title.dark { color: var(--text-dark); }
+    .section-title .accent-blue   { color: var(--electric); }
+    .section-title .accent-green  { color: var(--green); }
+    .section-title .accent-yellow { color: var(--yellow); }
+
     .section-body {
-      font-size: 17px; line-height: 1.7; color: var(--gray-2); font-weight: 300;
-      max-width: 560px;
+      font-size: 17px; line-height: 1.72; color: var(--text-secondary); font-weight: 300;
     }
+    .section-body.dark { color: var(--text-dark-sub); }
 
-    /* ── Scanner animation ── */
-    @keyframes scan-line {
-      0%   { top: 0; opacity: 1; }
-      90%  { top: 100%; opacity: 1; }
-      100% { top: 100%; opacity: 0; }
+    /* ─────────────────────── BADGES ─────────────────────── */
+    .badge {
+      font-family: var(--font-body); font-size: 11px; font-weight: 600;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 5px 12px; border-radius: 20px; border: 1px solid; white-space: nowrap;
     }
-    @keyframes finding-appear {
-      from { opacity: 0; transform: translateX(6px); }
-      to   { opacity: 1; transform: translateX(0); }
-    }
-    @keyframes badge-pop {
-      0%   { transform: scale(0.8); opacity: 0; }
-      60%  { transform: scale(1.08); }
-      100% { transform: scale(1); opacity: 1; }
-    }
-    @keyframes pulse-ring {
-      0%   { transform: scale(1); opacity: 0.6; }
-      100% { transform: scale(1.5); opacity: 0; }
-    }
-    @keyframes counter-up { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes grid-fade {
-      0%,100% { opacity: 0.03; }
-      50%      { opacity: 0.07; }
-    }
-    @keyframes float {
-      0%,100% { transform: translateY(0px); }
-      50%      { transform: translateY(-8px); }
-    }
+    .badge-green  { color: var(--green);    border-color: rgba(16,178,108,0.35);  background: var(--green-dim); }
+    .badge-blue   { color: var(--electric); border-color: rgba(58,123,255,0.35);  background: var(--electric-dim); }
+    .badge-yellow { color: var(--yellow);   border-color: rgba(255,194,71,0.4);   background: var(--yellow-dim); }
+    .badge-dark-green { color: var(--green); border-color: rgba(16,178,108,0.25); background: rgba(16,178,108,0.06); }
 
-    /* ── Noise overlay ── */
-    .noise {
-      position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.025;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    }
-
-    /* ── Grid bg ── */
-    .grid-bg {
-      position: absolute; inset: 0; pointer-events: none;
-      background-image:
-        linear-gradient(rgba(31,79,216,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(31,79,216,0.04) 1px, transparent 1px);
-      background-size: 48px 48px;
-      animation: grid-fade 8s ease-in-out infinite;
-    }
-
-    /* ── Stat cards ── */
+    /* ─────────────────────── CARDS ─────────────────────── */
     .stat-card {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: 12px; padding: 28px 32px;
-      transition: border-color 0.3s;
+      border-radius: 14px; padding: 32px 28px;
+      transition: border-color 0.3s, transform 0.2s;
+      border: 1px solid var(--border);
     }
-    .stat-card:hover { border-color: var(--border-hi); }
+    .stat-card:hover { transform: translateY(-2px); }
     .stat-num {
-      font-family: var(--font-display); font-size: 44px; font-weight: 800;
-      letter-spacing: -0.04em; line-height: 1;
+      font-family: var(--font-display); font-size: 48px; font-weight: 800;
+      letter-spacing: -0.05em; line-height: 1;
     }
-    .stat-label { font-size: 14px; color: var(--gray-2); margin-top: 6px; }
+    .stat-label { font-size: 13.5px; color: var(--text-secondary); margin-top: 8px; line-height: 1.5; }
 
-    /* ── Feature card ── */
     .feature-card {
-      background: var(--bg-card); border: 1px solid var(--border);
+      background: var(--surface-card); border: 1px solid var(--border);
       border-radius: 14px; padding: 32px;
-      transition: border-color 0.3s, transform 0.3s;
-      position: relative; overflow: hidden;
+      transition: border-color 0.3s, transform 0.25s, background 0.3s;
+      position: relative; overflow: hidden; height: 100%;
     }
-    .feature-card::before {
+    .feature-card::after {
       content: ''; position: absolute; top: 0; left: 0; right: 0;
-      height: 1px; background: linear-gradient(90deg, transparent, var(--blue-dim), transparent);
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--electric), transparent);
       opacity: 0; transition: opacity 0.3s;
     }
-    .feature-card:hover { border-color: var(--border-hi); transform: translateY(-3px); }
-    .feature-card:hover::before { opacity: 1; }
+    .feature-card:hover {
+      border-color: var(--border-hi);
+      transform: translateY(-4px);
+      background: rgba(31,79,216,0.07);
+    }
+    .feature-card:hover::after { opacity: 1; }
     .feature-icon {
       width: 44px; height: 44px; border-radius: 10px;
       background: var(--blue-dim); border: 1px solid rgba(31,79,216,0.2);
@@ -212,81 +252,179 @@ const FontLoader = () => (
     }
     .feature-title {
       font-family: var(--font-display); font-size: 17px; font-weight: 600;
-      color: var(--white); margin-bottom: 10px; letter-spacing: -0.01em;
+      color: #fff; margin-bottom: 10px; letter-spacing: -0.01em;
     }
-    .feature-body { font-size: 14px; line-height: 1.65; color: var(--gray-2); }
+    .feature-body { font-size: 13.5px; line-height: 1.7; color: var(--text-secondary); }
 
-    /* ── Persona card ── */
-    .persona-card {
-      border: 1px solid var(--border); border-radius: 14px; padding: 36px;
-      background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 100%);
-      transition: border-color 0.3s;
-      position: relative;
+    /* Light-background feature card */
+    .feature-card-light {
+      background: #fff; border: 1px solid var(--border-light);
+      border-radius: 14px; padding: 32px;
+      transition: border-color 0.3s, transform 0.25s, box-shadow 0.3s;
+      position: relative; overflow: hidden; height: 100%;
+      box-shadow: 0 4px 16px rgba(10,42,102,0.05);
     }
-    .persona-card:hover { border-color: var(--border-hi); }
+    .feature-card-light::after {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--signal), var(--electric));
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .feature-card-light:hover {
+      border-color: rgba(31,79,216,0.5);
+      transform: translateY(-8px);
+      box-shadow: 0 24px 48px rgba(31,79,216,0.16), inset 0 0 0 1px rgba(31,79,216,0.1);
+    }
+    .feature-card-light:hover::after { opacity: 1; }
+    .feature-icon-light {
+      width: 44px; height: 44px; border-radius: 10px;
+      background: var(--blue-dim); border: 1px solid rgba(31,79,216,0.15);
+      display: grid; place-items: center; margin-bottom: 20px;
+    }
+    .feature-title-light {
+      font-family: var(--font-display); font-size: 17px; font-weight: 600;
+      color: var(--text-dark); margin-bottom: 10px; letter-spacing: -0.01em;
+    }
+    .feature-body-light { font-size: 13.5px; line-height: 1.7; color: var(--text-dark-sub); }
+
+    .persona-card {
+      border: 1px solid var(--border-light); border-radius: 14px; padding: 36px;
+      background: #fff; box-shadow: 0 4px 16px rgba(10,42,102,0.05);
+      transition: border-color 0.3s, box-shadow 0.3s, transform 0.25s;
+      position: relative; overflow: hidden; height: 100%;
+    }
+    .persona-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0;
+      height: 3px; background: var(--green);
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+    .persona-card:hover {
+      border-color: rgba(16,178,108,0.5);
+      box-shadow: 0 24px 48px rgba(16,178,108,0.16), inset 0 0 0 1px rgba(16,178,108,0.1);
+      transform: translateY(-8px);
+    }
+    .persona-card:hover::before { transform: scaleX(1); }
     .persona-role {
-      font-size: 12px; font-weight: 500; letter-spacing: 0.1em;
-      text-transform: uppercase; color: var(--blue); margin-bottom: 16px;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--green); margin-bottom: 14px;
     }
     .persona-title {
-      font-family: var(--font-display); font-size: 22px; font-weight: 700;
-      color: var(--white); margin-bottom: 14px; letter-spacing: -0.02em;
-      line-height: 1.2;
+      font-family: var(--font-display); font-size: 21px; font-weight: 700;
+      color: var(--text-dark); margin-bottom: 14px; letter-spacing: -0.02em;
+      line-height: 1.25;
     }
-    .persona-body { font-size: 14px; line-height: 1.7; color: var(--gray-2); }
-    .persona-divider {
-      width: 32px; height: 2px; background: var(--teal); margin-top: 24px;
-    }
+    .persona-body { font-size: 14px; line-height: 1.72; color: var(--text-dark-sub); }
+    .persona-divider { width: 32px; height: 2.5px; background: var(--green); margin-top: 24px; border-radius: 2px; }
 
-    /* ── Compliance badge ── */
-    .compliance-badges {
-      display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px;
-    }
-    .badge {
-      font-size: 11px; font-weight: 500; letter-spacing: 0.08em;
-      text-transform: uppercase; padding: 5px 12px; border-radius: 20px;
-      border: 1px solid; white-space: nowrap;
-    }
-    .badge-teal { color: var(--teal); border-color: rgba(16,178,108,0.3); background: var(--teal-dim); }
-    .badge-blue { color: var(--blue); border-color: rgba(31,79,216,0.3); background: var(--blue-dim); }
-
-    /* ── CTA section ── */
-    .cta-section {
-      position: relative; overflow: hidden;
-      background: linear-gradient(135deg, #0A2A66 0%, #0C1F4A 100%);
-      border-top: 1px solid var(--border);
-      border-radius: 20px;
-    }
-    .cta-glow {
-      position: absolute; width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(31,79,216,0.12) 0%, transparent 70%);
-      border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%,-50%);
-      pointer-events: none;
-    }
-
-    /* ── Logo row ── */
+    /* ─────────────────────── LOGO ROW ─────────────────────── */
     .logo-row {
       display: flex; align-items: center; gap: 48px;
       flex-wrap: wrap; justify-content: center;
     }
     .logo-item {
-      font-family: var(--font-display); font-size: 13px; font-weight: 600;
-      letter-spacing: 0.06em; text-transform: uppercase;
-      color: var(--gray-3); opacity: 0.65;
-      transition: opacity 0.2s;
+      font-family: var(--font-display); font-size: 13px; font-weight: 700;
+      letter-spacing: 0.04em; text-transform: uppercase;
+      color: var(--text-secondary); display: flex; align-items: center; gap: 10px;
+      transition: color 0.2s;
     }
-    .logo-item:hover { opacity: 1; }
+    .logo-item:hover { color: #fff; }
 
-    /* ── Responsive ── */
+    /* ─────────────────────── CTA SECTION ─────────────────────── */
+    .cta-section {
+      position: relative; overflow: hidden;
+      background: linear-gradient(145deg, #0A2A66 0%, #0C1F4A 50%, #080E22 100%);
+      border-radius: 20px; border: 1px solid var(--border);
+    }
+    .cta-glow {
+      position: absolute; width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(31,79,216,0.14) 0%, transparent 65%);
+      border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%,-50%);
+      pointer-events: none;
+    }
+
+    /* ─────────────────────── URGENCY BANNER ─────────────────────── */
+    .urgency-banner {
+      background: linear-gradient(135deg, rgba(255,194,71,0.12) 0%, rgba(255,170,44,0.08) 100%);
+      border: 1px solid rgba(255,194,71,0.3);
+      border-radius: 10px;
+      padding: 14px 20px;
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 28px;
+    }
+    .urgency-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--yellow); flex-shrink: 0;
+      box-shadow: 0 0 0 4px rgba(255,194,71,0.2);
+      animation: pulse-yellow 2s ease-in-out infinite;
+    }
+    @keyframes pulse-yellow {
+      0%,100% { box-shadow: 0 0 0 4px rgba(255,194,71,0.2); }
+      50%      { box-shadow: 0 0 0 8px rgba(255,194,71,0.05); }
+    }
+
+    /* ─────────────────────── SECTION DIVIDERS ─────────────────────── */
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border-light), transparent);
+    }
+
+    /* ─────────────────────── ANIMATIONS ─────────────────────── */
+    @keyframes scan-line {
+      0%   { top: 0; opacity: 1; }
+      90%  { top: 100%; opacity: 1; }
+      100% { top: 100%; opacity: 0; }
+    }
+    @keyframes finding-appear {
+      from { opacity: 0; transform: translateX(8px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes badge-pop {
+      0%   { transform: scale(0.8); opacity: 0; }
+      60%  { transform: scale(1.1); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes pulse-ring {
+      0%   { transform: scale(1); opacity: 0.6; }
+      100% { transform: scale(1.6); opacity: 0; }
+    }
+    @keyframes float {
+      0%,100% { transform: translateY(0px); }
+      50%      { transform: translateY(-10px); }
+    }
+    @keyframes grid-fade {
+      0%,100% { opacity: 0.03; }
+      50%      { opacity: 0.065; }
+    }
+    @keyframes shimmer {
+      0%   { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+
+    /* ─────────────────────── MISC ─────────────────────── */
+    .noise {
+      position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.022;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    }
+    .grid-bg {
+      position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(31,79,216,0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(31,79,216,0.045) 1px, transparent 1px);
+      background-size: 48px 48px;
+      animation: grid-fade 8s ease-in-out infinite;
+    }
+
+    /* ─────────────────────── MOBILE ─────────────────────── */
     .mobile-menu-btn {
       display: none; background: transparent; border: none;
-      color: var(--white); cursor: pointer; padding: 8px;
+      color: #fff; cursor: pointer; padding: 8px;
     }
 
     @media (max-width: 1024px) {
-      .hero-wrapper { flex-direction: column; text-align: center; gap: 50px !important; }
-      .hero-content { align-items: center; }
-      .hero-scanner { flex: 1 !important; width: 100%; max-width: 480px; align-self: center; }
+      .hero-wrapper   { flex-direction: column; text-align: center; gap: 50px !important; }
+      .hero-content   { align-items: center; }
+      .hero-scanner   { flex: 1 !important; width: 100%; max-width: 480px; align-self: center; }
       .problem-wrapper { flex-direction: column; gap: 50px !important; text-align: center; }
       .compliance-wrapper { flex-direction: column; gap: 40px !important; text-align: center; padding: 40px 32px !important; }
     }
@@ -294,138 +432,132 @@ const FontLoader = () => (
     @media (max-width: 768px) {
       .mobile-menu-btn { display: block; }
       .nav { padding: 0 20px; flex-wrap: wrap; height: auto; min-height: 68px; }
-      .nav-links { 
-        display: none; flex-direction: column; width: 100%; 
+      .nav-links {
+        display: none; flex-direction: column; width: 100%;
         padding: 20px 0; gap: 20px; border-top: 1px solid var(--border); margin-top: 10px;
       }
       .nav-links.open { display: flex; }
       .nav-cta { display: none; width: 100%; flex-direction: column; padding-bottom: 24px; gap: 12px; }
       .nav-cta.open { display: flex; }
       .nav-cta .btn-ghost, .nav-cta .btn-primary { width: 100%; justify-content: center; }
-      
       .container { padding: 0 16px; }
-      .section-title { font-size: 32px !important; }
+      .section-title { font-size: 30px !important; }
       .cta-section { padding: 60px 24px !important; }
       .hero-btns, .compliance-badges { justify-content: center; }
       .logo-row { gap: 24px; }
       .stat-card { padding: 24px; }
+      .urgency-banner { flex-direction: column; text-align: center; }
     }
   `}</style>
 );
 
 // ─── Icons ──────────────────────────────────────────────────────────────────
-const IconScan = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-    <path d="M3 6V3h3M14 3h3v3M17 14v3h-3M6 17H3v-3" stroke="#1F4FD8" strokeWidth="1.5" strokeLinecap="round"/>
-    <rect x="6" y="6" width="8" height="8" rx="1.5" stroke="#1F4FD8" strokeWidth="1.5"/>
-    <path d="M8 10h4" stroke="#1F4FD8" strokeWidth="1.5" strokeLinecap="round"/>
+const IconScan = ({ color = "var(--signal)" }) => (
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+    <path d="M3 6V3h3M14 3h3v3M17 14v3h-3M6 17H3v-3" stroke={color} strokeWidth="1.5" strokeLinecap="round"/>
+    <rect x="6" y="6" width="8" height="8" rx="1.5" stroke={color} strokeWidth="1.5"/>
+    <path d="M8 10h4" stroke={color} strokeWidth="1.5" strokeLinecap="round"/>
   </svg>
 );
-const IconShield = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-    <path d="M10 2L4 4.5V9c0 3.87 2.62 7.25 6 8 3.38-.75 6-4.13 6-8V4.5L10 2Z" stroke="#1F4FD8" strokeWidth="1.5" strokeLinejoin="round"/>
-    <path d="M7 10l2 2 4-4" stroke="#1F4FD8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+const IconShield = ({ color = "var(--signal)" }) => (
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+    <path d="M10 2L4 4.5V9c0 3.87 2.62 7.25 6 8 3.38-.75 6-4.13 6-8V4.5L10 2Z" stroke={color} strokeWidth="1.5" strokeLinejoin="round"/>
+    <path d="M7 10l2 2 4-4" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
-const IconDoc = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-    <path d="M11 2H5a1 1 0 00-1 1v14a1 1 0 001 1h10a1 1 0 001-1V8l-5-6Z" stroke="#1F4FD8" strokeWidth="1.5" strokeLinejoin="round"/>
-    <path d="M11 2v6h6M7 11h6M7 14h4" stroke="#1F4FD8" strokeWidth="1.5" strokeLinecap="round"/>
+const IconDoc = ({ color = "var(--signal)" }) => (
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+    <path d="M11 2H5a1 1 0 00-1 1v14a1 1 0 001 1h10a1 1 0 001-1V8l-5-6Z" stroke={color} strokeWidth="1.5" strokeLinejoin="round"/>
+    <path d="M11 2v6h6M7 11h6M7 14h4" stroke={color} strokeWidth="1.5" strokeLinecap="round"/>
   </svg>
 );
-const IconCode = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-    <path d="M7 6L3 10l4 4M13 6l4 4-4 4M11 4l-2 12" stroke="#1F4FD8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+const IconCode = ({ color = "var(--signal)" }) => (
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+    <path d="M7 6L3 10l4 4M13 6l4 4-4 4M11 4l-2 12" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
-const IconReview = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-    <circle cx="10" cy="10" r="7" stroke="#1F4FD8" strokeWidth="1.5"/>
-    <path d="M10 7v3.5l2.5 1.5" stroke="#1F4FD8" strokeWidth="1.5" strokeLinecap="round"/>
+const IconReview = ({ color = "var(--signal)" }) => (
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+    <circle cx="10" cy="10" r="7" stroke={color} strokeWidth="1.5"/>
+    <path d="M10 7v3.5l2.5 1.5" stroke={color} strokeWidth="1.5" strokeLinecap="round"/>
   </svg>
 );
-const IconGate = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-    <path d="M4 10h12M4 10l3-3M4 10l3 3M16 10l-3-3M16 10l-3 3" stroke="#1F4FD8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+const IconGate = ({ color = "var(--signal)" }) => (
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+    <path d="M4 10h12M4 10l3-3M4 10l3 3M16 10l-3-3M16 10l-3 3" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 const IconArrow = () => (
-  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
     <path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
-const IconCheck = ({ color = "#10B26C" }) => (
-  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+const IconCheck = ({ color = "#10B26C", size = 14 }) => (
+  <svg width={size} height={size} viewBox="0 0 14 14" fill="none" aria-hidden="true">
     <path d="M2 7l4 4 6-7" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+);
+const IconX = () => (
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+    <path d="M3 3l8 8M11 3l-8 8" stroke="#FF4D6A" strokeWidth="1.6" strokeLinecap="round"/>
   </svg>
 );
 
 // ─── Scanner Visualization ───────────────────────────────────────────────────
 const ALL_FINDINGS = [
-  { id: 1, sev: "critical", msg: "Missing alt text on 14 images",        rule: "WCAG 1.1.1" },
+  { id: 1, sev: "critical", msg: "Missing alt text on 14 images",           rule: "WCAG 1.1.1" },
   { id: 2, sev: "critical", msg: "Insufficient color contrast ratio 2.3:1", rule: "WCAG 1.4.3" },
-  { id: 3, sev: "high",     msg: "Form inputs lack accessible labels",    rule: "WCAG 1.3.1" },
-  { id: 4, sev: "high",     msg: "Keyboard navigation trap detected",     rule: "WCAG 2.1.2" },
-  { id: 5, sev: "medium",   msg: "Missing document language attribute",   rule: "WCAG 3.1.1" },
+  { id: 3, sev: "high",     msg: "Form inputs lack accessible labels",       rule: "WCAG 1.3.1" },
+  { id: 4, sev: "high",     msg: "Keyboard navigation trap detected",        rule: "WCAG 2.1.2" },
+  { id: 5, sev: "medium",   msg: "Missing document language attribute",      rule: "WCAG 3.1.1" },
 ];
-const SEV_COLOR = { critical: "#FF4D6A", high: "#FFAA2C", medium: "#1F4FD8" };
+const SEV_COLOR = { critical: "#FF4D6A", high: "#FFAA2C", medium: "#3A7BFF" };
 
 function ScannerViz() {
   const [findings, setFindings] = useState([]);
   const [resolved, setResolved] = useState(0);
   const [scanning, setScanning] = useState(false);
   const [done, setDone] = useState(false);
-  const sevColor = SEV_COLOR;
 
   useEffect(() => {
     let cancelled = false;
-    let timeouts = [];
+    const timeouts = [];
     const T = (fn, ms) => { const id = setTimeout(() => { if (!cancelled) fn(); }, ms); timeouts.push(id); };
-    const cleanup = () => { cancelled = true; timeouts.forEach(clearTimeout); };
-
     const runCycle = () => {
-      setFindings([]);
-      setResolved(0);
-      setDone(false);
-      setScanning(true);
-
-      ALL_FINDINGS.forEach((finding, idx) => {
-        T(() => setFindings(prev => [...prev, finding]), 800 + idx * 700);
-      });
-
+      setFindings([]); setResolved(0); setDone(false); setScanning(true);
+      ALL_FINDINGS.forEach((f, i) => T(() => setFindings(p => [...p, f]), 800 + i * 700));
       const afterScan = 800 + ALL_FINDINGS.length * 700 + 400;
       T(() => setScanning(false), afterScan);
-
-      ALL_FINDINGS.forEach((_, idx) => {
-        T(() => setResolved(idx + 1), afterScan + 500 + idx * 400);
-      });
-
+      ALL_FINDINGS.forEach((_, i) => T(() => setResolved(i + 1), afterScan + 500 + i * 400));
       const afterResolve = afterScan + 500 + ALL_FINDINGS.length * 400;
       T(() => setDone(true), afterResolve);
       T(runCycle, afterResolve + 3500);
     };
-
     runCycle();
-    return cleanup;
+    return () => { cancelled = true; timeouts.forEach(clearTimeout); };
   }, []);
 
   return (
-    <div style={{
-      background: "var(--bg-card)", border: "1px solid var(--border)",
-      borderRadius: 16, overflow: "hidden", fontFamily: "var(--font-body)",
-      boxShadow: "0 32px 80px rgba(0,0,0,0.5)",
-    }}>
-      {/* Terminal bar */}
+    <div
+      role="img"
+      aria-label="ACCEDA scan engine showing detected accessibility violations being automatically fixed"
+      style={{
+        background: "rgba(8,14,34,0.9)", border: "1px solid rgba(255,255,255,0.09)",
+        borderRadius: 16, overflow: "hidden",
+        boxShadow: "0 40px 100px rgba(0,0,0,0.55), 0 0 0 1px rgba(31,79,216,0.1)",
+      }}
+    >
+      {/* Title bar */}
       <div style={{
-        background: "#0A2A66", padding: "12px 20px",
-        borderBottom: "1px solid var(--border)",
+        background: "rgba(10,42,102,0.8)", padding: "12px 18px",
+        borderBottom: "1px solid rgba(255,255,255,0.07)",
         display: "flex", alignItems: "center", gap: 8,
       }}>
-        <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#FF4D6A", display: "block" }}/>
-        <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#FFAA2C", display: "block" }}/>
-        <span style={{ width: 10, height: 10, borderRadius: "50%", background: "#10B26C", display: "block" }}/>
-        <span style={{ marginLeft: 12, fontSize: 12, color: "var(--gray-3)", letterSpacing: "0.04em" }}>
-          acceda — audit · {done ? "complete" : scanning ? "scanning..." : "remediating..."}
+        {["#FF4D6A","#FFAA2C","#10B26C"].map((c, i) => (
+          <span key={i} style={{ width: 10, height: 10, borderRadius: "50%", background: c, display: "block" }}/>
+        ))}
+        <span style={{ marginLeft: 12, fontSize: 11.5, color: "rgba(255,255,255,0.4)", fontFamily: "var(--font-mono)", letterSpacing: "0.04em" }}>
+          ACCEDA — audit · {done ? "complete" : scanning ? "scanning..." : "remediating..."}
         </span>
         <span style={{
           marginLeft: "auto", width: 7, height: 7, borderRadius: "50%",
@@ -435,88 +567,170 @@ function ScannerViz() {
         }}/>
       </div>
 
-      {/* Scan target */}
-      <div style={{ padding: "16px 20px", borderBottom: "1px solid var(--border)", position: "relative", overflow: "hidden", height: 56 }}>
-        <div style={{ fontSize: 12, color: "var(--gray-3)", marginBottom: 4 }}>Target</div>
-        <div style={{ fontSize: 13, color: "var(--gray-1)", fontWeight: 500 }}>useacceda.com/portal</div>
+      {/* Target */}
+      <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(255,255,255,0.06)", position: "relative", overflow: "hidden", minHeight: 52 }}>
+        <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginBottom: 4, fontFamily: "var(--font-mono)" }}>Target</div>
+        <div style={{ fontSize: 13, color: "rgba(255,255,255,0.85)", fontWeight: 500, fontFamily: "var(--font-mono)" }}>useacceda.com/portal</div>
         {scanning && (
           <div style={{
             position: "absolute", left: 0, right: 0, top: 0, height: 2,
-            background: "linear-gradient(90deg, transparent, var(--blue), transparent)",
+            background: "linear-gradient(90deg, transparent, var(--electric), transparent)",
             animation: "scan-line 1.8s ease-in-out infinite",
           }}/>
         )}
       </div>
 
-      {/* Findings list */}
-      <div style={{ padding: "16px 20px", minHeight: 200, maxHeight: 200, overflowY: "hidden" }}>
+      {/* Findings */}
+      <div style={{ padding: "16px 18px", minHeight: 210, maxHeight: 210, overflowY: "hidden" }}>
         {findings.length === 0 && (
-          <div style={{ fontSize: 12, color: "var(--gray-3)", paddingTop: 8 }}>Initializing scan engine...</div>
+          <div style={{ fontSize: 12, color: "rgba(255,255,255,0.25)", paddingTop: 8, fontFamily: "var(--font-mono)" }}>
+            Initializing scan engine...
+          </div>
         )}
         {findings.map((f, idx) => {
           const isResolved = idx < resolved;
           return (
             <div key={f.id} style={{
-              display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 10,
+              display: "flex", alignItems: "flex-start", gap: 10, marginBottom: 11,
               animation: "finding-appear 0.3s ease-out both",
-              opacity: isResolved ? 0.45 : 1,
+              opacity: isResolved ? 0.4 : 1,
               transition: "opacity 0.4s",
             }}>
               <span style={{
-                fontSize: 10, fontWeight: 600, padding: "2px 7px", borderRadius: 4,
-                background: isResolved ? "rgba(16,178,108,0.1)" : `${sevColor[f.sev]}18`,
-                color: isResolved ? "var(--teal)" : sevColor[f.sev],
-                border: `1px solid ${isResolved ? "rgba(16,178,108,0.3)" : `${sevColor[f.sev]}40`}`,
-                whiteSpace: "nowrap", marginTop: 1, letterSpacing: "0.04em",
-                transition: "all 0.4s",
+                fontSize: 9.5, fontWeight: 700, padding: "3px 7px", borderRadius: 4,
+                background: isResolved ? "rgba(16,178,108,0.1)" : `${SEV_COLOR[f.sev]}18`,
+                color: isResolved ? "var(--green)" : SEV_COLOR[f.sev],
+                border: `1px solid ${isResolved ? "rgba(16,178,108,0.3)" : `${SEV_COLOR[f.sev]}40`}`,
+                whiteSpace: "nowrap", marginTop: 1, letterSpacing: "0.05em",
+                transition: "all 0.4s", fontFamily: "var(--font-mono)",
               }}>
                 {isResolved ? "FIXED" : f.sev.toUpperCase()}
               </span>
               <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 12, color: isResolved ? "var(--gray-3)" : "var(--gray-1)", transition: "color 0.4s", textDecoration: isResolved ? "line-through" : "none" }}>
-                  {f.msg}
-                </div>
-                <div style={{ fontSize: 11, color: "var(--gray-3)", marginTop: 2 }}>{f.rule}</div>
+                <div style={{
+                  fontSize: 12.5, color: isResolved ? "rgba(255,255,255,0.3)" : "rgba(255,255,255,0.88)",
+                  transition: "color 0.4s",
+                  textDecoration: isResolved ? "line-through" : "none",
+                }}>{f.msg}</div>
+                <div style={{ fontSize: 11, color: "rgba(255,255,255,0.25)", marginTop: 2, fontFamily: "var(--font-mono)" }}>{f.rule}</div>
               </div>
-              {isResolved && (
-                <div style={{ animation: "badge-pop 0.3s ease-out" }}>
-                  <IconCheck />
-                </div>
-              )}
+              {isResolved && <div style={{ animation: "badge-pop 0.3s ease-out" }}><IconCheck /></div>}
             </div>
           );
         })}
       </div>
 
-      {/* Status bar */}
+      {/* Progress bar */}
       <div style={{
-        padding: "12px 20px", borderTop: "1px solid var(--border)",
-        background: "#0A2A66", display: "flex", alignItems: "center", gap: 16,
+        padding: "12px 18px", borderTop: "1px solid rgba(255,255,255,0.06)",
+        background: "rgba(10,42,102,0.6)", display: "flex", alignItems: "center", gap: 14,
       }}>
-        <div style={{ flex: 1, height: 4, background: "rgba(255,255,255,0.06)", borderRadius: 2, overflow: "hidden" }}>
+        <div style={{ flex: 1, height: 3, background: "rgba(255,255,255,0.06)", borderRadius: 2, overflow: "hidden" }}>
           <div style={{
             height: "100%", borderRadius: 2,
-            background: done ? "var(--teal)" : "var(--blue)",
-            width: done ? "100%" : `${(resolved / ALL_FINDINGS.length) * 100}%`,
-            transition: "width 0.4s ease, background 0.4s",
+            background: done ? "var(--green)" : "linear-gradient(90deg, var(--signal), var(--electric))",
+            width: `${(resolved / ALL_FINDINGS.length) * 100}%`,
+            transition: "width 0.4s ease",
           }}/>
         </div>
-        <span style={{ fontSize: 11, color: done ? "var(--teal)" : "var(--gray-2)", whiteSpace: "nowrap" }}>
-          {done ? "✓ All issues resolved" : `${resolved}/${ALL_FINDINGS.length} resolved`}
+        <span style={{
+          fontSize: 11, fontFamily: "var(--font-mono)",
+          color: done ? "var(--green)" : "rgba(255,255,255,0.4)",
+          whiteSpace: "nowrap",
+        }}>
+          {done ? "✓ All resolved" : `${resolved}/${ALL_FINDINGS.length} resolved`}
         </span>
       </div>
     </div>
   );
 }
 
+// ─── Countdown Clock ────────────────────────────────────────────────────────
+function CountdownClock({ targetDate, compact = false, large = false, numberColor }) {
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, mins: 0, secs: 0 });
+
+  useEffect(() => {
+    const calculateTimeLeft = () => {
+      const difference = +new Date(targetDate) - +new Date();
+      if (difference > 0) {
+        setTimeLeft({
+          days: Math.floor(difference / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((difference / (1000 * 60 * 60)) % 24),
+          mins: Math.floor((difference / 1000 / 60) % 60),
+          secs: Math.floor((difference / 1000) % 60),
+        });
+      }
+    };
+
+    const timer = setInterval(calculateTimeLeft, 1000);
+    calculateTimeLeft();
+    return () => clearInterval(timer);
+  }, [targetDate]);
+
+  const Item = ({ val, label }) => (
+    <motion.div 
+      whileHover={{ scale: 1.1 }}
+      transition={{ type: "spring", stiffness: 400, damping: 25 }}
+      style={{ 
+        display: "flex", flexDirection: "column", alignItems: "center", 
+        minWidth: compact ? 34 : (large ? 70 : 44),
+        cursor: "default"
+      }}
+    >
+      <span style={{ 
+        fontFamily: "var(--font-mono)", 
+        fontSize: compact ? 14 : (large ? 36 : 18), 
+        fontWeight: 800, 
+        color: numberColor || (compact ? "inherit" : "var(--yellow)"),
+        lineHeight: 1
+      }}>
+        {val.toString().padStart(2, "0")}
+      </span>
+      <span style={{ 
+        fontSize: compact ? 9 : (large ? 10 : 9), 
+        textTransform: "uppercase", 
+        letterSpacing: "0.08em", 
+        opacity: 0.6, 
+        marginTop: compact ? 2 : (large ? 8 : 2),
+        fontWeight: large ? 700 : 400,
+        textShadow: large ? "0 1px 1px rgba(0,0,0,0.1)" : "none"
+      }}>
+        {label}
+      </span>
+    </motion.div>
+  );
+
+  const Separator = () => (
+    <span style={{ 
+      opacity: 0.3, 
+      fontSize: compact ? 12 : (large ? 24 : 16), 
+      marginTop: compact ? -10 : (large ? -22 : -14),
+      color: numberColor || "inherit"
+    }}>:</span>
+  );
+
+  return (
+    <div style={{ display: "flex", gap: compact ? 8 : (large ? 32 : 12), alignItems: "center" }}>
+      <Item val={timeLeft.days} label="Days" />
+      <Separator />
+      <Item val={timeLeft.hours} label="Hrs" />
+      <Separator />
+      <Item val={timeLeft.mins} label="Min" />
+      <Separator />
+      <Item val={timeLeft.secs} label="Sec" />
+    </div>
+  );
+}
+
 // ─── Animated Counter ────────────────────────────────────────────────────────
-function AnimatedNumber({ target, suffix = "", duration = 1500 }) {
+function AnimatedNumber({ target, suffix = "", duration = 1500, trigger = true }) {
   const [display, setDisplay] = useState(0);
+  const [resetKey, setResetKey] = useState(0);
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
   useEffect(() => {
-    if (!inView) return;
+    if (!inView && resetKey === 0) return;
     const start = performance.now();
     const step = (now) => {
       const p = Math.min((now - start) / duration, 1);
@@ -525,12 +739,81 @@ function AnimatedNumber({ target, suffix = "", duration = 1500 }) {
       if (p < 1) requestAnimationFrame(step);
     };
     requestAnimationFrame(step);
-  }, [inView, target, duration]);
+  }, [inView, target, duration, resetKey]);
+
+  // Exposed reset function for parent hover
+  useEffect(() => {
+    if (trigger === "hover-reset") {
+      setResetKey(prev => prev + 1);
+    }
+  }, [trigger]);
 
   return <span ref={ref}>{display}{suffix}</span>;
 }
 
-// ─── Fade-up wrapper ─────────────────────────────────────────────────────────
+// ─── Interactive Stat Card ──────────────────────────────────────────────────
+function InteractiveStatCard({ num, suffix, label, color, bg, border }) {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const [trigger, setTrigger] = useState(false);
+
+  function handleMouseMove({ currentTarget, clientX, clientY }) {
+    const { left, top } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
+  }
+
+  // Map card colors to spotlight RGBA
+  const getGlowColor = () => {
+    if (color === "var(--green)") return "rgba(16,178,108,0.12)";
+    if (color === "var(--electric)") return "rgba(31,79,216,0.12)";
+    if (color === "var(--yellow)") return "rgba(255,194,71,0.14)";
+    return "rgba(31,79,216,0.12)";
+  };
+
+  return (
+    <motion.div
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setTrigger("hover-reset")}
+      onMouseLeave={() => setTrigger(false)}
+      initial="initial"
+      whileHover="hover"
+      className="stat-card"
+      style={{
+        background: bg,
+        borderColor: border,
+        height: "100%",
+        position: "relative",
+        overflow: "hidden",
+        transition: "border-color 0.3s, background 0.3s"
+      }}
+      variants={{
+        initial: { y: 0, boxShadow: "0 0px 0px rgba(0,0,0,0)" },
+        hover: { y: -8, boxShadow: `0 24px 48px ${getGlowColor()}, inset 0 0 0 1px ${color}33` }
+      }}
+    >
+      {/* Spotlight Glow - Themed to card type */}
+      <motion.div
+        style={{
+          position: "absolute", top: 0, left: 0, right: 0, bottom: 0, zIndex: 0, pointerEvents: "none",
+          backgroundImage: useTransform(
+            [mouseX, mouseY],
+            ([x, y]) => `radial-gradient(400px circle at ${x}px ${y}px, ${getGlowColor()}, transparent 50%)`
+          )
+        }}
+      />
+      
+      <div style={{ position: "relative", zIndex: 1 }}>
+        <div className="stat-num" style={{ color: color }}>
+          <AnimatedNumber target={num} suffix={suffix} trigger={trigger} />
+        </div>
+        <p className="stat-label" style={{ color: "var(--text-dark-sub)" }}>{label}</p>
+      </div>
+    </motion.div>
+  );
+}
+
+// ─── FadeUp ─────────────────────────────────────────────────────────────────
 function FadeUp({ children, delay = 0, style = {} }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
@@ -547,7 +830,458 @@ function FadeUp({ children, delay = 0, style = {} }) {
   );
 }
 
-// ─── Main Component ──────────────────────────────────────────────────────────
+// ─── Interactive FAQ Item ──────────────────────────────────────────────────────
+function InteractiveFAQItem({ faq, index, isOpen, toggleOpen }) {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  function handleMouseMove({ currentTarget, clientX, clientY }) {
+    const { left, top } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
+  }
+
+  return (
+    <FadeUp delay={index * 0.08}>
+      <motion.div
+        onMouseMove={handleMouseMove}
+        initial="initial"
+        whileHover="hover"
+        animate={isOpen ? "open" : "initial"}
+        variants={{
+          initial: { backgroundColor: "#fff", scale: 1, boxShadow: "0 4px 12px rgba(10,42,102,0.02)" },
+          hover: { 
+            backgroundColor: "rgba(255, 194, 71, 0.25)",
+            boxShadow: "0 12px 30px rgba(10,42,102,0.06)",
+            transition: {
+              backgroundColor: { duration: 0.2 },
+              duration: 0.3
+            }
+          },
+          open: { backgroundColor: "#fff", scale: 1, boxShadow: "0 8px 32px rgba(31,79,216,0.08)" }
+        }}
+        style={{
+          position: "relative",
+          border: `1px solid ${isOpen ? "rgba(31,79,216,0.3)" : "rgba(31,79,216,0.08)"}`,
+          borderRadius: 14, overflow: "hidden",
+          transition: "border 0.2s ease, background 0.2s ease",
+        }}
+      >
+        {/* Spotlight Glow - Warm Blue Tint */}
+        <motion.div
+          style={{
+            position: "absolute", top: 0, left: 0, right: 0, bottom: 0, zIndex: 0, pointerEvents: "none",
+            backgroundImage: useTransform(
+              [mouseX, mouseY],
+              ([x, y]) => `radial-gradient(500px circle at ${x}px ${y}px, rgba(31,79,216,0.04), transparent 40%)`
+            )
+          }}
+        />
+
+        <button
+          id={`faq-btn-${index}`}
+          aria-expanded={isOpen}
+          aria-controls={`faq-panel-${index}`}
+          onClick={toggleOpen}
+          style={{
+            position: "relative", zIndex: 1,
+            width: "100%", textAlign: "left", background: "none", border: "none",
+            padding: "22px 28px", display: "flex", justifyContent: "space-between",
+            alignItems: "center", cursor: "pointer",
+            fontFamily: "var(--font-display)", fontSize: 16.5, fontWeight: 600,
+            letterSpacing: "-0.01em", color: var_text_dark,
+          }}
+        >
+          <motion.span
+            variants={{
+              initial: { color: var_text_dark },
+              hover: { color: "var(--signal)" }
+            }}
+            transition={{ duration: 0.2 }}
+          >
+            {faq.q}
+          </motion.span>
+          
+          <motion.div
+            animate={{ rotate: isOpen ? 180 : 0 }}
+            variants={{
+              initial: { scale: 1, backgroundColor: isOpen ? "var(--signal)" : "rgba(31,79,216,0.08)", color: isOpen ? "#fff" : "var(--signal)" },
+              hover: { scale: 1.1, backgroundColor: isOpen ? "var(--signal)" : "rgba(31,79,216,0.12)" }
+            }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            style={{
+              width: 30, height: 30, borderRadius: "50%",
+              display: "grid", placeItems: "center", flexShrink: 0,
+            }}
+          >
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M6 9l6 6 6-6"/>
+            </svg>
+          </motion.div>
+        </button>
+
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              id={`faq-panel-${index}`}
+              role="region"
+              aria-labelledby={`faq-btn-${index}`}
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              style={{ position: "relative", zIndex: 1 }}
+            >
+              <div style={{ padding: "0 28px 24px", fontSize: 14.5, lineHeight: 1.72, color: "var(--text-dark-sub)" }}>
+                {faq.a}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+    </FadeUp>
+  );
+}
+
+// ─── FAQ Accordion ───────────────────────────────────────────────────────────
+function FAQAccordion({ faqs }) {
+  const [openIndex, setOpenIndex] = useState(null);
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      {faqs.map((faq, index) => (
+        <InteractiveFAQItem 
+          key={index} 
+          faq={faq} 
+          index={index} 
+          isOpen={openIndex === index} 
+          toggleOpen={() => setOpenIndex(openIndex === index ? null : index)} 
+        />
+      ))}
+    </div>
+  );
+}
+
+// ─── Interactive Feature Card ────────────────────────────────────────────────
+function InteractiveFeatureCard({ icon, title, body }) {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  function handleMouseMove({ currentTarget, clientX, clientY }) {
+    const { left, top } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
+  }
+
+  return (
+    <motion.article
+      onMouseMove={handleMouseMove}
+      initial="initial"
+      whileHover="hover"
+      style={{ height: "100%", position: "relative" }}
+      className="feature-card-light"
+    >
+      {/* Spotlight Glow */}
+      <motion.div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: 0,
+          pointerEvents: "none",
+          backgroundImage: useTransform(
+            [mouseX, mouseY],
+            ([x, y]) => `radial-gradient(450px circle at ${x}px ${y}px, rgba(31,79,216,0.12), transparent 50%)`
+          )
+        }}
+      />
+      
+      <div style={{ position: "relative", zIndex: 1 }}>
+        <motion.div
+          className="feature-icon-light"
+          variants={{
+            initial: { scale: 1, backgroundColor: "var(--blue-dim)", borderColor: "rgba(31,79,216,0.15)" },
+            hover: { scale: 1.15, rotate: 6, backgroundColor: "rgba(31,79,216,0.12)", borderColor: "rgba(31,79,216,0.4)" }
+          }}
+          transition={{ type: "spring", stiffness: 400, damping: 10 }}
+          style={{ 
+            color: "#10B26C",
+            filter: "drop-shadow(0 0 8px rgba(16,178,108,0.6))" 
+          }}
+        >
+          {icon}
+        </motion.div>
+        
+        <motion.h3
+          id={`feature-${title.replace(/\s+/g, '-').toLowerCase()}`}
+          className="feature-title-light"
+          variants={{
+            initial: { y: 0, color: "var(--text-dark)" },
+            hover: { y: -2, color: "var(--signal)" }
+          }}
+          transition={{ duration: 0.2 }}
+        >
+          {title}
+        </motion.h3>
+        
+        <motion.p
+          className="feature-body-light"
+          variants={{
+            initial: { opacity: 0.8 },
+            hover: { opacity: 1 }
+          }}
+          transition={{ duration: 0.2 }}
+        >
+          {body}
+        </motion.p>
+      </div>
+    </motion.article>
+  );
+}
+
+// ─── Interactive Persona Card ────────────────────────────────────────────────
+function InteractivePersonaCard({ role, title, body, index }) {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  function handleMouseMove({ currentTarget, clientX, clientY }) {
+    const { left, top } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
+  }
+
+  return (
+    <motion.article
+      onMouseMove={handleMouseMove}
+      initial="initial"
+      whileHover="hover"
+      style={{ height: "100%", position: "relative" }}
+      className="persona-card"
+      aria-labelledby={`persona-${index}`}
+    >
+      {/* Spotlight Glow - Teal Green */}
+      <motion.div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: 0,
+          pointerEvents: "none",
+          backgroundImage: useTransform(
+            [mouseX, mouseY],
+            ([x, y]) => `radial-gradient(450px circle at ${x}px ${y}px, rgba(16,178,108,0.12), transparent 50%)`
+          )
+        }}
+      />
+      
+      <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", height: "100%" }}>
+        <div className="persona-role">{role}</div>
+        
+        <motion.h3
+          id={`persona-${index}`}
+          className="persona-title"
+          variants={{
+            initial: { y: 0, color: "var(--text-dark)" },
+            hover: { y: -2, color: "var(--green)" }
+          }}
+          transition={{ duration: 0.2 }}
+        >
+          {title}
+        </motion.h3>
+        
+        <motion.p
+          className="persona-body"
+          variants={{
+            initial: { opacity: 0.8 },
+            hover: { opacity: 1 }
+          }}
+          transition={{ duration: 0.2 }}
+        >
+          {body}
+        </motion.p>
+        
+        <div style={{ flex: 1 }} />
+        
+        <motion.div 
+          className="persona-divider" 
+          aria-hidden="true" 
+          variants={{
+            initial: { width: 32, opacity: 0.6, filter: "drop-shadow(0 0 0px rgba(16,178,108,0))" },
+            hover: { width: 48, opacity: 1, filter: "drop-shadow(0 0 8px rgba(16,178,108,0.6))" }
+          }}
+          transition={{ duration: 0.2 }}
+        />
+      </div>
+    </motion.article>
+  );
+}
+
+// ─── Interactive Form Wrapper ────────────────────────────────────────────────
+function InteractiveFormWrapper({ children }) {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  function handleMouseMove({ currentTarget, clientX, clientY }) {
+    const { left, top } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
+  }
+
+  return (
+    <div
+      onMouseMove={handleMouseMove}
+      style={{
+        position: "relative",
+        background: "rgba(255,255,255,0.02)",
+        border: "1px solid rgba(255,255,255,0.06)",
+        borderRadius: 20,
+        padding: "40px",
+        overflow: "hidden",
+        boxShadow: "0 24px 80px rgba(0,0,0,0.2)"
+      }}
+    >
+      {/* Spotlight Glow - Yellow */}
+      <motion.div
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: 0,
+          pointerEvents: "none",
+          backgroundImage: useTransform(
+            [mouseX, mouseY],
+            ([x, y]) => `radial-gradient(500px circle at ${x}px ${y}px, rgba(255,194,71,0.08), transparent 45%)`
+          )
+        }}
+      />
+      <div style={{ position: "relative", zIndex: 1 }}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+// ─── Interactive Problem Terminal ─────────────────────────────────────────────
+function InteractiveProblemTerminal() {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  function handleMouseMove({ currentTarget, clientX, clientY }) {
+    const { left, top } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
+  }
+
+  return (
+    <motion.div
+      onMouseMove={handleMouseMove}
+      initial="initial"
+      whileHover="hover"
+      variants={{
+        initial: { scale: 1, x: 0, y: 0 },
+        hover: { 
+          scale: 1.01,
+          transition: {
+            duration: 0.1,
+            repeat: 3,
+            repeatType: "reverse"
+          }
+        }
+      }}
+      style={{
+        background: "rgba(8,14,34,0.9)", border: "1px solid rgba(255,255,255,0.08)",
+        borderRadius: 14, overflow: "hidden",
+        boxShadow: "0 24px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,77,106,0.08)",
+        position: "relative",
+        cursor: "crosshair"
+      }}
+    >
+      {/* Spotlight Glow - Red/Warning Tint */}
+      <motion.div
+        style={{
+          position: "absolute", top: 0, left: 0, right: 0, bottom: 0, zIndex: 0, pointerEvents: "none",
+          backgroundImage: useTransform(
+            [mouseX, mouseY],
+            ([x, y]) => `radial-gradient(400px circle at ${x}px ${y}px, rgba(255,77,106,0.12), transparent 50%)`
+          )
+        }}
+      />
+
+      <div style={{ position: "relative", zIndex: 1 }}>
+        <div style={{ background: "rgba(10,42,102,0.7)", padding: "10px 16px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", gap: 6, alignItems: "center" }}>
+          <motion.span 
+            animate={{ opacity: [0.4, 1, 0.4] }}
+            transition={{ duration: 1.5, repeat: Infinity }}
+            style={{ width: 8, height: 8, borderRadius: "50%", background: "#FF4D6A", display: "block" }}
+          />
+          <span style={{ fontSize: 10.5, color: "rgba(255,255,255,0.3)", fontFamily: "var(--font-mono)", letterSpacing: "0.04em" }}>legacy-scanner — output.log</span>
+        </div>
+        <div style={{ padding: "20px 18px", fontFamily: "var(--font-mono)", fontSize: 12, lineHeight: 2.1 }}>
+          {[
+            { t: "FAIL", c: "#FF4D6A", msg: "color-contrast (17 elements)" },
+            { t: "WARN", c: "#FFAA2C", msg: "image-alt — needs-review" },
+            { t: "WARN", c: "#FFAA2C", msg: "label — needs-review" },
+            { t: "INFO", c: "rgba(255,255,255,0.25)", msg: "aria-hidden-focus — manual check required" },
+            { t: "INFO", c: "rgba(255,255,255,0.25)", msg: "link-name — manual check required" },
+          ].map((l, i) => (
+            <motion.div 
+              key={i} 
+              whileHover={{ x: 4, transition: { duration: 0.2 } }}
+              style={{ display: "flex", gap: 14, alignItems: "baseline" }}
+            >
+              <span style={{ color: l.c, fontWeight: 700, width: 36, flexShrink: 0, fontSize: 10, letterSpacing: "0.06em" }}>{l.t}</span>
+              <span style={{ color: "rgba(255,255,255,0.55)" }}>{l.msg}</span>
+            </motion.div>
+          ))}
+          <div style={{ marginTop: 14, paddingTop: 14, borderTop: "1px solid rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.25)", fontSize: 11 }}>
+            Scanned 1 page · 5 issues reported · 0 fixes provided
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+// CSS variable helpers for JSX (avoids string interpolation in template literals)
+const var_border_light = "#E2E8F0";
+const var_text_dark = "#0F1729";
+
+// ─── Data ────────────────────────────────────────────────────────────────────
+const features = [
+  { icon: <IconScan color="#1F4FD8" />,   title: "Initiate",              body: "Deep-crawl your web applications for WCAG violations. Every page, every state, every interaction — surfaced and prioritized automatically." },
+  { icon: <IconCode color="#1F4FD8" />,   title: "Review",               body: "Receive exact code diffs and step-by-step implementation guides for every finding. Your engineers ship fixes in minutes, not sprints." },
+  { icon: <IconDoc color="#1F4FD8" />,    title: "Reports",           body: "Auto-compile your full audit history into compliance-ready Voluntary Product Accessibility Templates on demand." },
+  { icon: <IconGate color="#1F4FD8" />,   title: "CI/CD",                body: "Block non-compliant code from merging. Accessibility guardrails integrate directly into the pipeline your team already uses." },
+  { icon: <IconReview color="#1F4FD8" />, title: "Remediate",            body: "Structured workflows for ambiguous findings automated scanners can't confidently classify. Clarity at every decision point." },
+  { icon: <IconShield color="#1F4FD8" />, title: "Audio & Video Captions",   body: "Automatically transcribe and caption media assets. Every video and audio file — made accessible without manual effort." },
+];
+
+const personas = [
+  { role: "Engineering Leaders", title: "Ship faster without compliance friction.", body: "ACCEDA integrates directly into the development lifecycle. Findings surface before code merges — not after production deploys. Your team moves at full velocity, protected." },
+  { role: "QA & Testing Teams",  title: "Eliminate ambiguity from every review cycle.", body: "The Human Review dashboard structures complex accessibility decisions with guided resolution workflows. No more guesswork. No more missed edge cases." },
+  { role: "Compliance Officers", title: "Audit-ready evidence. Always.", body: "Automated VPAT compilation and a full audit trail that holds up under legal scrutiny. Enterprise and government deliverables — generated, not assembled manually." },
+];
+
+const stats = [
+  { num: 97,  suffix: "%", label: "of WCAG violations detected — vs. 30–40% with legacy tools", color: "var(--electric)", bg: "rgba(58,123,255,0.06)",  border: "rgba(58,123,255,0.15)" },
+  { num: 12,  suffix: "x", label: "faster remediation with AI-curated code fix guides",        color: "var(--green)",    bg: "rgba(16,178,108,0.06)",  border: "rgba(16,178,108,0.15)" },,
+  { num: 100, suffix: "+", label: "enterprise teams protecting compliance posture with ACCEDA",   color: "var(--yellow)",   bg: "rgba(255,194,71,0.06)",  border: "rgba(255,194,71,0.18)" },
+];
+
+const faqs = [
+  { q: "What is the ADA Title II April 24, 2026 deadline?",               a: "The U.S. Department of Justice finalized a rule requiring all state and local governments, public universities, and covered public entities to make their websites and apps compliant with WCAG 2.1 Level AA by April 24, 2026. ACCEDA helps organizations meet this deadline with automated scanning, AI-assisted remediation, and audit-ready documentation." },
+  { q: "How is ACCEDA different from Axe or Lighthouse?",                  a: "Legacy scanners like Axe and Lighthouse detect only 30–40% of WCAG violations and provide no remediation path. ACCEDA detects significantly more issues using AI, then delivers exact code fixes and guided implementation paths — plus automated VPAT generation and CI/CD integration." },
+  { q: "What is a VPAT, and can ACCEDA generate one automatically?",       a: "A VPAT (Voluntary Product Accessibility Template) is a formal legal document required by enterprise and government procurement teams. ACCEDA automatically compiles VPATs from your audit history — eliminating weeks of manual compliance work." },
+  { q: "What accessibility standards does ACCEDA support?",                a: "ACCEDA supports WCAG 2.1 AA, WCAG 2.2 AA, Section 508, ADA Title II, and EN 301 549 — covering U.S. federal requirements, ADA obligations, and the European Accessibility Act standard." },
+  { q: "Can ACCEDA integrate with our CI/CD pipeline?",                    a: "Yes. ACCEDA's compliance gate integrates with GitHub Actions, GitLab CI, Jenkins, and other common pipelines to block inaccessible code before it reaches production." },
+];
+
+// ─── Main Page ───────────────────────────────────────────────────────────────
 export default function AccedaLandingPage() {
   const [navScrolled, setNavScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -558,44 +1292,22 @@ export default function AccedaLandingPage() {
     return unsub;
   }, [scrollY]);
 
-  const features = [
-    { icon: <IconScan />,   title: "ACCEDA Scan",    body: "Deep-crawl your web applications for WCAG violations. Every page, every state, every interaction — surfaced and prioritized automatically." },
-    { icon: <IconCode />,   title: "ACCEDA Fix",         body: "Receive exact code diffs and step-by-step implementation guides for every finding. Your engineers ship fixes in minutes, not sprints." },
-    { icon: <IconDoc />,    title: "ACCEDA Reports",           body: "Auto-compile your full audit history into compliance-ready Voluntary Product Accessibility Templates on demand." },
-    { icon: <IconGate />,   title: "ACCEDA CI",               body: "Block non-compliant code from merging. Accessibility guardrails integrate directly into the pipeline your team already uses." },
-    { icon: <IconReview />, title: "ACCEDA DevKit",              body: "Structured workflows for ambiguous findings automated scanners can't confidently classify. Clarity at every decision point." },
-    { icon: <IconShield />, title: "Audio & Video Captions",            body: "Automatically transcribe and caption media assets. Every video and audio file — made accessible without manual effort." },
-  ];
-
-  const personas = [
-    { role: "Engineering Leaders", title: "Ship faster without compliance friction.", body: "Acceda integrates directly into the development lifecycle. Findings surface before code merges — not after production deploys. Your team moves at full velocity, protected." },
-    { role: "QA & Testing Teams",  title: "Eliminate ambiguity from every review cycle.", body: "The Human Review dashboard structures complex accessibility decisions with guided resolution workflows. No more guesswork. No more missed edge cases." },
-    { role: "Compliance Officers", title: "Audit-ready evidence. Always.", body: "Automated VPAT compilation and a full audit trail that holds up under legal scrutiny. Enterprise and government deliverables — generated, not assembled manually." },
-  ];
-
-  const stats = [
-    { num: 97, suffix: "%", label: "of WCAG violations detected — vs. 30–40% with legacy tools", color: "var(--teal)" },
-    { num: 12, suffix: "x", label: "faster remediation with AI-generated code fix guides",       color: "var(--blue)" },
-    { num: 100, suffix: "+", label: "enterprise teams protecting compliance posture with Acceda", color: "var(--white)" },
-  ];
-
   return (
     <>
       <FontLoader />
-      <div className="noise" />
+      <a href="#main-content" className="skip-link">Skip to main content</a>
+      <div className="noise" aria-hidden="true" />
 
-      {/* ── Navigation ──────────────────────────────────────────── */}
-      <nav className="nav" style={{
-        borderBottomColor: navScrolled ? "var(--border)" : "transparent",
-        background: navScrolled ? "rgba(8,12,20,0.92)" : "transparent",
-      }}>
-        {/* Logo */}
-        <a href="#" className="nav-logo" onClick={() => setMobileMenuOpen(false)}>
-          <Image src={accedaLogo} alt="Acceda Logo" height={55} priority style={{ width: "auto" }} />
+      {/* ════════════════════════════════════════════════════════
+          NAVIGATION
+      ════════════════════════════════════════════════════════ */}
+      <nav aria-label="Main navigation" className={`nav ${navScrolled ? "scrolled" : ""}`}>
+        <a href="#" className="nav-logo" onClick={() => setMobileMenuOpen(false)}
+           aria-label="Acceda — return to top">
+          <Image src={accedaLogo} alt="ACCEDA — Compliance-Ready Accessibility Platform" height={52} priority style={{ width: "auto" }} />
         </a>
 
-        {/* Desktop links — center */}
-        <ul className={`nav-links ${mobileMenuOpen ? 'open' : ''}`}>
+        <ul className={`nav-links ${mobileMenuOpen ? "open" : ""}`}>
           {[
             { label: "Platform",   href: "#platform" },
             { label: "Use Cases",  href: "#use-cases" },
@@ -609,32 +1321,45 @@ export default function AccedaLandingPage() {
           ))}
         </ul>
 
-        {/* CTA buttons — right */}
-        <div className={`nav-cta ${mobileMenuOpen ? 'open' : ''}`}>
+        <div className={`nav-cta ${mobileMenuOpen ? "open" : ""}`}>
           <a href="#cta" className="btn-ghost">Sign Up</a>
-          <a href="https://cal.com/acceda/demo"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-primary">
+          <a href="https://cal.com/acceda/demo" target="_blank" rel="noopener noreferrer" className="btn-primary">
             Request Demo <IconArrow />
           </a>
         </div>
 
-        {/* Mobile toggle — only visible on small screens */}
-        <button className="mobile-menu-btn" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-            {mobileMenuOpen ? <path d="M18 6L6 18M6 6l12 12" /> : <path d="M4 6h16M4 12h16M4 18h16" />}
+        <button
+          className="mobile-menu-btn"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          aria-expanded={mobileMenuOpen}
+          aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+            {mobileMenuOpen ? <path d="M18 6L6 18M6 6l12 12"/> : <path d="M4 6h16M4 12h16M4 18h16"/>}
           </svg>
         </button>
       </nav>
-      {/* ── Hero ─────────────────────────────────────────────────── */}
-      <section style={{ position: "relative", overflow: "hidden", paddingTop: 160, paddingBottom: 120 }}>
-        <div className="grid-bg" />
-        {/* Radial glow */}
-        <div style={{
-          position: "absolute", top: "10%", left: "50%", transform: "translateX(-50%)",
-          width: 800, height: 600,
-          background: "radial-gradient(ellipse, rgba(31,79,216,0.10) 0%, transparent 65%)",
+
+      {/* ════════════════════════════════════════════════════════
+          HERO — Dark navy, full brand drama
+      ════════════════════════════════════════════════════════ */}
+      <section
+        id="main-content"
+        tabIndex="-1"
+        style={{ position: "relative", overflow: "hidden", paddingTop: 160, paddingBottom: 130, background: "var(--surface-darker)" }}
+      >
+        <div className="grid-bg" aria-hidden="true" />
+        {/* Dual radial glows — blue left, green right */}
+        <div aria-hidden="true" style={{
+          position: "absolute", top: "-10%", left: "20%",
+          width: 700, height: 600,
+          background: "radial-gradient(ellipse, rgba(31,79,216,0.13) 0%, transparent 65%)",
+          pointerEvents: "none",
+        }}/>
+        <div aria-hidden="true" style={{
+          position: "absolute", bottom: "0%", right: "5%",
+          width: 400, height: 400,
+          background: "radial-gradient(ellipse, rgba(16,178,108,0.08) 0%, transparent 65%)",
           pointerEvents: "none",
         }}/>
 
@@ -645,46 +1370,44 @@ export default function AccedaLandingPage() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.1 }}
+                transition={{ duration: 0.55, delay: 0.15 }}
               >
-                <div className="eyebrow">AI-Powered Accessibility Compliance</div>
+                <div className="eyebrow">Compliance-Ready Accessibility Platform</div>
               </motion.div>
 
               <motion.h1
                 style={{
                   fontFamily: "var(--font-display)", fontWeight: 800,
-                  fontSize: "clamp(40px,5vw,68px)", lineHeight: 1.0,
-                  letterSpacing: "-0.04em", color: "var(--white)", marginBottom: 28,
+                  fontSize: "clamp(38px,5vw,66px)", lineHeight: 1.0,
+                  letterSpacing: "-0.04em", color: "#fff", marginBottom: 28,
                 }}
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 32 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.7, delay: 0.22, ease: [0.22, 1, 0.36, 1] }}
               >
                 ACCEDA<br/>
-                <span style={{ color: "var(--blue)" }}>Compliance at</span><br/>
-                Scale and Speed
+                <span style={{ color: "var(--electric)" }}>Compliance at</span><br/>
+                Speed and Scale
               </motion.h1>
 
               <motion.p
                 className="section-body"
-                style={{ marginBottom: 40, fontSize: 18 }}
+                style={{ marginBottom: 40, fontSize: 17.5, maxWidth: 520 }}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.35 }}
+                transition={{ duration: 0.6, delay: 0.36 }}
               >
-                AI scans, fixes, and verifies accessibility across your entire product stack. Build accessible, ship confidently.
+                ACCEDA is a Compliance-Ready Accessibility Platform that automatically detects, fixes, and documents WCAG 2.1 AA, Section 508, and ADA Title II violations for enterprise software teams.
               </motion.p>
 
               <motion.div
                 className="hero-btns"
-                style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 52 }}
+                style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 44 }}
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.55, delay: 0.48 }}
               >
-                <a href="https://cal.com/acceda/demo" 
-                   target="_blank" 
-                   rel="noopener noreferrer"
+                <a href="https://cal.com/acceda/demo" target="_blank" rel="noopener noreferrer"
                    className="btn-primary btn-primary-lg">
                   Request an Enterprise Trial <IconArrow />
                 </a>
@@ -692,60 +1415,79 @@ export default function AccedaLandingPage() {
               </motion.div>
 
               <motion.div
-                className="compliance-badges"
                 style={{ display: "flex", gap: 8, flexWrap: "wrap" }}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.55, delay: 0.6 }}
               >
-                {["WCAG 2.2 AA", "Section 508", "ADA Title II"].map(b => (
-                  <span key={b} className="badge badge-teal">{b}</span>
+                {["WCAG 2.2 AA", "Section 508", "ADA Title II", "SOC 2 Type II"].map(b => (
+                  <span key={b} className="badge badge-green">{b}</span>
                 ))}
               </motion.div>
             </div>
 
-            {/* Right: Scanner viz */}
+            {/* Right: Scanner */}
             <motion.div
               className="hero-scanner"
-              style={{ flex: "0 0 480px", minWidth: 0, animation: "float 5s ease-in-out infinite" }}
+              style={{ flex: "0 0 480px", minWidth: 0, animation: "float 5s ease-in-out infinite", position: "relative" }}
               initial={{ opacity: 0, x: 40 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
             >
+              {/* Urgency banner overlapping scanner */}
+              <div 
+                className="urgency-banner" 
+                role="note" 
+                aria-label="ADA Title II deadline notice"
+                style={{
+                  position: "absolute",
+                  top: -85,
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  width: "max-content",
+                  zIndex: 10,
+                  backdropFilter: "blur(12px)",
+                  boxShadow: "0 10px 40px rgba(0,0,0,0.3)",
+                  background: "linear-gradient(135deg, rgba(8,14,34,0.85) 0%, rgba(10,42,102,0.75) 100%)"
+                }}
+              >
+                <span className="urgency-dot" aria-hidden="true" />
+                <div style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                  <span style={{ fontSize: 13, color: "var(--yellow)", fontWeight: 600 }}>
+                    ADA Title II deadline:
+                  </span>
+                  <span style={{ fontSize: 12.5, color: "rgba(255,255,255,0.85)" }}>
+                    April 24, 2026 — organizations must comply with WCAG 2.1 AA
+                  </span>
+                </div>
+              </div>
               <ScannerViz />
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* ── Industries ─────────────────────────────────────────── */}
-      <section style={{ borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", padding: "44px 0", background: "var(--bg-card)" }}>
+      {/* ════════════════════════════════════════════════════════
+          INDUSTRIES — Thin dark band
+      ════════════════════════════════════════════════════════ */}
+      <section
+        style={{ background: "rgba(8,14,34,0.98)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", padding: "40px 0" }}
+        aria-label="Industries served"
+      >
         <div className="container">
-          <div style={{ textAlign: "center", marginBottom: 32 }}>
-            <p style={{ fontSize: 13, color: "var(--blue)", letterSpacing: "0.1em", textTransform: "uppercase", fontWeight: 600 }}>
-              Purpose-built for high-compliance industries
-            </p>
-          </div>
-          <div className="logo-row">
+          <p style={{ textAlign: "center", fontSize: 11.5, color: "var(--electric)", letterSpacing: "0.13em", textTransform: "uppercase", fontWeight: 700, marginBottom: 28 }}>
+            Purpose-built for high-compliance industries
+          </p>
+          <div className="logo-row" role="list">
             {[
-              { label: "Financial Services", color: "var(--blue)" },
-              { label: "Gov & Defense", color: "var(--teal)" },
-              { label: "Healthcare Tech", color: "var(--white)" },
-              { label: "Enterprise SaaS", color: "var(--amber)" },
-              { label: "E-Commerce", color: "var(--red)" }
+              { label: "Financial Services", color: "var(--electric)" },
+              { label: "Gov & Defense",      color: "var(--green)" },
+              { label: "Healthcare Tech",    color: "#fff" },
+              { label: "Enterprise SaaS",    color: "var(--yellow)" },
+              { label: "E-Commerce",         color: "#FF4D6A" },
             ].map(l => (
-              <div key={l.label} className="logo-item" style={{ 
-                fontFamily: "var(--font-display)", 
-                fontSize: 16, 
-                fontWeight: 700,
-                letterSpacing: "0.02em",
-                color: "var(--white)",
-                opacity: 0.9,
-                display: "flex",
-                alignItems: "center",
-                gap: 12
-              }}>
-                <span style={{ width: 6, height: 6, borderRadius: "50%", background: l.color }}></span>
+              <div key={l.label} className="logo-item" role="listitem">
+                <span style={{ width: 6, height: 6, borderRadius: "50%", background: l.color, flexShrink: 0 }} aria-hidden="true" />
                 {l.label}
               </div>
             ))}
@@ -753,35 +1495,38 @@ export default function AccedaLandingPage() {
         </div>
       </section>
 
-      {/* ── Stats ────────────────────────────────────────────────── */}
-      <section style={{ padding: "100px 0" }}>
+      {/* ════════════════════════════════════════════════════════
+          STATS — Light section (Soft Gray) — SECTION RHYTHM BREAK
+      ════════════════════════════════════════════════════════ */}
+      <section style={{ background: "var(--surface-light)", padding: "100px 0" }} aria-label="Platform statistics">
         <div className="container">
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }} role="list">
             {stats.map((s, i) => (
-              <FadeUp key={i} delay={i * 0.12}>
-                <div className="stat-card">
-                  <div className="stat-num" style={{ color: s.color }}>
-                    <AnimatedNumber target={s.num} suffix={s.suffix} />
-                  </div>
-                  <p className="stat-label">{s.label}</p>
-                </div>
+              <FadeUp key={i} delay={i * 0.12} style={{ height: "100%" }}>
+                <InteractiveStatCard {...s} />
               </FadeUp>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── Problem Statement ─────────────────────────────────────── */}
-      <section style={{ padding: "100px 0", background: "var(--bg-2)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}>
+      {/* ════════════════════════════════════════════════════════
+          PROBLEM — Back to dark, with visual depth
+      ════════════════════════════════════════════════════════ */}
+      <section
+        style={{ padding: "110px 0", background: "var(--surface-dark)", borderTop: "1px solid var(--border)" }}
+        aria-labelledby="problem-heading"
+      >
         <div className="container">
           <div className="problem-wrapper" style={{ display: "flex", gap: 80, alignItems: "center", flexWrap: "wrap" }}>
             <FadeUp style={{ flex: 1, minWidth: 280, display: "flex", flexDirection: "column" }}>
-              <div className="eyebrow" style={{ display: "flex" }}>The Problem</div>
-              <h2 className="section-title" style={{ marginBottom: 24 }}>
+              <div className="eyebrow">The Problem</div>
+              <h2 id="problem-heading" className="section-title" style={{ marginBottom: 24 }}>
                 Legacy scanners leave<br/>
-                your organization <span className="accent">exposed.</span>
+                your organization{" "}
+                <span className="accent-blue">exposed.</span>
               </h2>
-              <p className="section-body" style={{ marginBottom: 32 }}>
+              <p className="section-body" style={{ marginBottom: 32, maxWidth: 500 }}>
                 Traditional tools identify a fraction of actual WCAG violations — then hand your team an ambiguous list with no path to resolution. Engineers spend sprint cycles on guesswork. Compliance officers manually assemble legal documentation. And the 60–70% of issues that go undetected remain a litigation liability.
               </p>
               <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
@@ -791,63 +1536,39 @@ export default function AccedaLandingPage() {
                   "VPATs assembled manually — weeks of compliance work",
                   "No CI/CD integration — issues discovered post-release",
                 ].map((p, i) => (
-                  <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: 14, color: "var(--gray-2)" }}>
-                    <span style={{ color: "var(--red)", marginTop: 2, flexShrink: 0 }}>
-                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                        <path d="M3 3l8 8M11 3l-8 8" stroke="#FF4D6A" strokeWidth="1.6" strokeLinecap="round"/>
-                      </svg>
-                    </span>
+                  <div key={i} style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: 14, color: "var(--text-secondary)" }}>
+                    <span style={{ marginTop: 2, flexShrink: 0 }}><IconX /></span>
                     {p}
                   </div>
                 ))}
               </div>
             </FadeUp>
 
-            {/* Problem visual */}
             <FadeUp delay={0.15} style={{ flex: 1, minWidth: 280 }}>
-              <div style={{
-                background: "var(--bg-card)", border: "1px solid var(--border)",
-                borderRadius: 14, overflow: "hidden",
-                boxShadow: "0 24px 60px rgba(0,0,0,0.4)",
-              }}>
-                <div style={{ background: "#0A2A66", padding: "12px 16px", borderBottom: "1px solid var(--border)", display: "flex", gap: 8, alignItems: "center" }}>
-                  <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#FF4D6A", display:"block" }}/>
-                  <span style={{ fontSize: 11, color: "var(--gray-3)", letterSpacing: "0.04em" }}>legacy-scanner — output.log</span>
-                </div>
-                <div style={{ padding: "20px", fontFamily: "monospace", fontSize: 12, lineHeight: 2 }}>
-                  {[
-                    { t: "FAIL", c: "#FF4D6A", msg: "color-contrast (17 elements)" },
-                    { t: "WARN", c: "#FFAA2C", msg: "image-alt — needs-review" },
-                    { t: "WARN", c: "#FFAA2C", msg: "label — needs-review" },
-                    { t: "INFO", c: "var(--gray-3)", msg: "aria-hidden-focus — manual check required" },
-                    { t: "INFO", c: "var(--gray-3)", msg: "link-name — manual check required" },
-                  ].map((l, i) => (
-                    <div key={i} style={{ display: "flex", gap: 12, alignItems: "center" }}>
-                      <span style={{ color: l.c, fontWeight: 700, width: 36, flexShrink: 0, fontSize: 10, letterSpacing: "0.05em" }}>{l.t}</span>
-                      <span style={{ color: "var(--gray-2)" }}>{l.msg}</span>
-                    </div>
-                  ))}
-                  <div style={{ marginTop: 12, paddingTop: 12, borderTop: "1px solid var(--border)", color: "var(--gray-3)", fontSize: 11 }}>
-                    Scanned 1 page · 5 issues reported · 0 fixes provided
-                  </div>
-                </div>
-              </div>
+              <InteractiveProblemTerminal />
             </FadeUp>
           </div>
         </div>
       </section>
 
-      {/* ── Features ─────────────────────────────────────────────── */}
-      <section id="platform" style={{ padding: "120px 0" }}>
+      {/* ════════════════════════════════════════════════════════
+          FEATURES / PLATFORM — Light (white/cream) — RHYTHM BREAK
+      ════════════════════════════════════════════════════════ */}
+      <section
+        id="platform"
+        style={{ padding: "120px 0", background: "var(--surface-cream)" }}
+        aria-labelledby="platform-heading"
+      >
         <div className="container">
           <FadeUp>
             <div style={{ textAlign: "center", marginBottom: 72 }}>
-              <div className="eyebrow" style={{ justifyContent: "center" }}>The Platform</div>
-              <h2 className="section-title" style={{ marginBottom: 20 }}>
-                From scan to evidence,<br/><span className="accent">automatically.</span>
+              <div className="eyebrow blue" style={{ justifyContent: "center" }}>The Platform</div>
+              <h2 id="platform-heading" className="section-title dark" style={{ marginBottom: 20 }}>
+                Build Accessible,{" "}
+                <span style={{ color: "var(--signal)" }}>Ship Confidently.</span>
               </h2>
-              <p className="section-body" style={{ margin: "0 auto", textAlign: "center" }}>
-                Acceda manages the entire accessibility compliance lifecycle — detection, remediation, review, and legal documentation — in a single integrated platform.
+              <p className="section-body dark" style={{ margin: "0 auto", textAlign: "center", maxWidth: 540 }}>
+                ACCEDA manages the entire accessibility compliance lifecycle — detection, remediation, review, and legal documentation — in a single integrated platform.
               </p>
             </div>
           </FadeUp>
@@ -855,80 +1576,140 @@ export default function AccedaLandingPage() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 16 }}>
             {features.map((f, i) => (
               <FadeUp key={i} delay={i * 0.07} style={{ height: "100%" }}>
-                <div className="feature-card" style={{ height: "100%" }}>
-                  <div className="feature-icon">{f.icon}</div>
-                  <div className="feature-title">{f.title}</div>
-                  <p className="feature-body">{f.body}</p>
-                </div>
+                <InteractiveFeatureCard icon={f.icon} title={f.title} body={f.body} />
               </FadeUp>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── Personas ─────────────────────────────────────────────── */}
-      <section id="use-cases" style={{ padding: "100px 0", background: "var(--bg-2)", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}>
+      {/* ════════════════════════════════════════════════════════
+          PERSONAS — Back to dark
+      ════════════════════════════════════════════════════════ */}
+      <section
+        id="use-cases"
+        style={{ padding: "110px 0", background: "var(--surface-dark)", borderTop: "1px solid var(--border)" }}
+        aria-labelledby="personas-heading"
+      >
         <div className="container">
           <FadeUp>
-            <div style={{ marginBottom: 60 }}>
+            <div style={{ marginBottom: 64 }}>
               <div className="eyebrow">Built For Your Team</div>
-              <h2 className="section-title">
+              <h2 id="personas-heading" className="section-title">
                 The right tool for<br/>every stakeholder.
               </h2>
             </div>
           </FadeUp>
-
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20 }}>
             {personas.map((p, i) => (
               <FadeUp key={i} delay={i * 0.1} style={{ height: "100%" }}>
-                <div className="persona-card" style={{ height: "100%" }}>
-                  <div className="persona-role">{p.role}</div>
-                  <div className="persona-title">{p.title}</div>
-                  <p className="persona-body">{p.body}</p>
-                  <div className="persona-divider"/>
-                </div>
+                <InteractivePersonaCard role={p.role} title={p.title} body={p.body} index={i} />
               </FadeUp>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── Compliance Coverage ───────────────────────────────────── */}
-      <section id="compliance" style={{ padding: "100px 0" }}>
+      {/* ════════════════════════════════════════════════════════
+          FAQ — Light cream, clean cards
+      ════════════════════════════════════════════════════════ */}
+      <section
+        id="faq"
+        aria-labelledby="faq-heading"
+        style={{ padding: "110px 0", background: "#F4F6F8", borderTop: "1px solid var(--border-light)" }}
+      >
+        <div className="container" style={{ maxWidth: 780 }}>
+          <FadeUp>
+            <div style={{ textAlign: "center", marginBottom: 52 }}>
+              <div className="eyebrow blue" style={{ justifyContent: "center" }}>Knowledge Base</div>
+              <h2 id="faq-heading" className="section-title dark" style={{ fontSize: "clamp(26px,3.5vw,42px)" }}>
+                Frequently Asked Questions
+              </h2>
+            </div>
+            <FAQAccordion faqs={faqs} />
+          </FadeUp>
+        </div>
+      </section>
+
+      {/* ════════════════════════════════════════════════════════
+          COMPLIANCE — Light section with Yellow urgency accent
+      ════════════════════════════════════════════════════════ */}
+      <section
+        id="compliance"
+        style={{ padding: "110px 0", background: "#6B7280", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}
+        aria-labelledby="compliance-heading"
+      >
         <div className="container">
           <FadeUp>
             <div className="compliance-wrapper" style={{
-              background: "var(--bg-card)", border: "1px solid var(--border)",
+              background: "#fff",
+              border: "1px solid var(--border-light)",
               borderRadius: 20, padding: "56px 64px",
               display: "flex", justifyContent: "space-between", alignItems: "center",
-              flexWrap: "wrap", gap: 40,
+              flexWrap: "wrap", gap: 48,
+              boxShadow: "0 4px 32px rgba(10,42,102,0.08)",
             }}>
-              <div style={{ flex: 1, minWidth: 260, display: "flex", flexDirection: "column" }}>
-                <div className="eyebrow" style={{ display: "flex" }}>Compliance Coverage</div>
-                <h2 className="section-title" style={{ fontSize: "clamp(26px,3.5vw,40px)", marginBottom: 16 }}>
+              <div style={{ flex: 1, minWidth: 260 }}>
+                <div className="eyebrow blue" style={{ display: "flex" }}>Compliance Coverage</div>
+                <h2 id="compliance-heading" className="section-title dark" style={{ fontSize: "clamp(26px,3.5vw,40px)", marginBottom: 16 }}>
                   Every standard.<br/>One platform.
                 </h2>
-                <p className="section-body" style={{ fontSize: 15 }}>
-                  Acceda is purpose-built for the standards your legal and compliance teams require — with the evidence trail to back every claim.
+                <p className="section-body dark" style={{ fontSize: 15 }}>
+                  ACCEDA is purpose-built for the standards your legal and compliance teams require — with the evidence trail to back every claim.
                 </p>
+
+                {/* Yellow urgency block */}
+                {/* Countdown urgency block */}
+                <div style={{
+                  marginTop: 28,
+                  background: "var(--yellow-dim)",
+                  border: "1px solid var(--border-yellow)",
+                  borderRadius: 14, padding: "20px 24px",
+                  display: "flex", flexDirection: "column", gap: 14, alignItems: "center",
+                  textAlign: "center"
+                }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <span style={{ fontSize: 20 }} aria-hidden="true">⚠️</span>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: "#0C1F4A", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                      April 24, 2026 US Government Deadline
+                    </span>
+                  </div>
+                  <div style={{ color: "#0C1F4A", width: "100%", display: "flex", justifyContent: "center" }}>
+                    <CountdownClock targetDate="2026-04-24T00:00:00" large numberColor="#000" />
+                  </div>
+                  <div style={{ 
+                    fontSize: 15.5, color: "#FFC247", opacity: 1, fontWeight: 500,
+                    textShadow: "0 1px 1px rgba(0,0,0,0.15)"
+                  }}>
+                    ADA Title II Mandatory Compliance Transition
+                  </div>
+                </div>
               </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                 {[
-                  { label: "WCAG 2.2 Level AA",   desc: "Web Content Accessibility Guidelines" },
-                  { label: "Section 508",           desc: "Federal Rehabilitation Act compliance" },
-                  { label: "ADA Title II",          desc: "Americans with Disabilities Act" },
-                  { label: "EN 301 549",            desc: "European accessibility standard" },
+                  { label: "WCAG 2.1 Level AA", desc: "Web Content Accessibility Guidelines" },
+                  { label: "Section 508",         desc: "Federal Rehabilitation Act compliance" },
+                  { label: "ADA Title II",         desc: "Americans with Disabilities Act" },
+                  { label: "SOC 2 Type II",           desc: "Service Organization Control" },
                 ].map((c, i) => (
-                  <div key={i} style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                    <div style={{
-                      width: 24, height: 24, borderRadius: 6, background: "var(--teal-dim)",
-                      border: "1px solid rgba(16,178,108,0.25)", display: "grid", placeItems: "center", flexShrink: 0,
-                    }}>
-                      <IconCheck />
-                    </div>
+                  <div key={i} style={{ display: "flex", alignItems: "center", gap: 14 }}>
+                    <motion.div 
+                      whileHover={{ scale: 1.2 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                      style={{
+                        width: 28, height: 28, borderRadius: 8,
+                        background: "rgba(16,178,108,0.1)",
+                        border: "1px solid rgba(16,178,108,0.25)",
+                        display: "grid", placeItems: "center", flexShrink: 0,
+                        cursor: "pointer"
+                      }}
+                    >
+                      <IconCheck size={13} />
+                    </motion.div>
                     <div>
-                      <div style={{ fontSize: 14, fontWeight: 600, color: "var(--white)" }}>{c.label}</div>
-                      <div style={{ fontSize: 12, color: "var(--gray-3)" }}>{c.desc}</div>
+                      <div style={{ fontSize: 14.5, fontWeight: 700, color: "var(--text-dark)" }}>{c.label}</div>
+                      <div style={{ fontSize: 12, color: "var(--ui-gray)", marginTop: 1 }}>{c.desc}</div>
                     </div>
                   </div>
                 ))}
@@ -938,56 +1719,111 @@ export default function AccedaLandingPage() {
         </div>
       </section>
 
-      {/* ── CTA ──────────────────────────────────────────────────── */}
-      <section id="cta" style={{ padding: "0 0 100px" }}>
+      {/* ════════════════════════════════════════════════════════
+          CTA — Deep dark with full brand drama
+      ════════════════════════════════════════════════════════ */}
+      <section
+        id="cta"
+        style={{ position: "relative", overflow: "hidden", padding: "100px 0", background: "var(--surface-darker)" }}
+        aria-labelledby="cta-heading"
+      >
+        <div className="grid-bg" aria-hidden="true" />
+        {/* Dual radial glows — matching Hero style */}
+        <div aria-hidden="true" style={{
+          position: "absolute", top: "25%", left: "calc(5% - 40px)",
+          width: 500, height: 400,
+          background: "radial-gradient(ellipse, rgba(255,194,71,0.07) 0%, transparent 65%)",
+          pointerEvents: "none",
+        }}/>
+
         <div className="container">
           <FadeUp>
             <div className="cta-section" style={{ padding: "96px 48px", textAlign: "center" }}>
-              <div className="cta-glow" />
+              <div className="cta-glow" aria-hidden="true" />
               <div style={{ position: "relative", zIndex: 1 }}>
-                <div className="eyebrow" style={{ justifyContent: "center" }}>Get Started</div>
-                <h2 style={{
-                  fontFamily: "var(--font-display)", fontSize: "clamp(32px,4.5vw,56px)",
-                  fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 1.08,
-                  color: "var(--white)", marginBottom: 20,
-                }}>
+                <div className="eyebrow yellow" style={{ justifyContent: "center" }}>Get Started</div>
+                <h2
+                  id="cta-heading"
+                  style={{
+                    fontFamily: "var(--font-display)", fontSize: "clamp(30px,4.5vw,54px)",
+                    fontWeight: 800, letterSpacing: "-0.04em", lineHeight: 1.08,
+                    color: "#fff", marginBottom: 20,
+                  }}
+                >
                   Secure your compliance<br/>posture today.
                 </h2>
                 <p className="section-body" style={{ margin: "0 auto 44px", textAlign: "center", maxWidth: 480 }}>
-                  Integrate Acceda into your engineering workflow and ship accessible products with confidence — backed by audit-ready evidence.
+                  Integrate ACCEDA into your engineering workflow and ship accessible products with confidence — backed by audit-ready evidence.
                 </p>
-              <div style={{ maxWidth: 480, margin: "0 auto" }}>
-                <DemoForm />
-              </div>
-              <div className="compliance-badges" style={{ justifyContent: "center", marginTop: 32 }}>
-                {["SOC 2 Type II", "WCAG 2.2 AA", "Section 508", "ADA Title II"].map(b => (
-                  <span key={b} className="badge badge-blue">{b}</span>
-                ))}
-              </div>
+                <div style={{ maxWidth: 520, margin: "0 auto" }}>
+                  <InteractiveFormWrapper>
+                    <DemoForm />
+                  </InteractiveFormWrapper>
+                </div>
+                <ul
+                  style={{ listStyle: "none", padding: 0, margin: "32px 0 0", display: "flex", justifyContent: "center", gap: 10, flexWrap: "wrap" }}
+                  aria-label="Compliance certifications"
+                >
+                  {[
+                    { label: "WCAG 2.2 AA",    aria: null },
+                    { label: "Section 508",    aria: null },
+                    { label: "ADA Title II",   aria: null },
+                    { label: "SOC 2 Type II",  aria: "SOC 2 Type II certified for enterprise security" },
+                  ].map(b => (
+                    <li key={b.label} style={{ margin: 0 }}>
+                      <span className="badge badge-yellow" aria-label={b.aria || undefined}>{b.label}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
           </FadeUp>
         </div>
       </section>
 
-      {/* ── Footer ───────────────────────────────────────────────── */}
-      <footer style={{ borderTop: "1px solid var(--border)", padding: "48px 0" }}>
-        <div className="container">
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 24 }}>
-            <a href="#" className="nav-logo">
-              <Image src={accedaLogo} alt="Acceda Logo" height={75} style={{ width: "auto" }} />
-            </a>
-            <div style={{ display: "flex", gap: 32, flexWrap: "wrap" }}>
-              {["Privacy Policy", "Terms of Service", "Security", "Accessibility Statement"].map(l => (
-                <a key={l} href="#" style={{ fontSize: 13, color: "var(--gray-3)", textDecoration: "none", transition: "color 0.2s" }}
-                  onMouseOver={e => e.target.style.color = "var(--gray-2)"}
-                  onMouseOut={e => e.target.style.color = "var(--gray-3)"}
-                >{l}</a>
+      {/* ════════════════════════════════════════════════════════
+          FOOTER
+      ════════════════════════════════════════════════════════ */}
+      <footer style={{ position: "relative", overflow: "hidden", background: "var(--surface-darker)", borderTop: "1px solid var(--border)", padding: "52px 0" }}>
+        <div className="grid-bg" aria-hidden="true" style={{ opacity: 0.04 }} />
+        {/* Subtle footer glows */}
+        <div aria-hidden="true" style={{
+          position: "absolute", bottom: "-10%", right: "-5%",
+          width: 500, height: 400,
+          background: "radial-gradient(ellipse, rgba(255,194,71,0.06) 0%, transparent 65%)",
+          pointerEvents: "none",
+        }}/>
+        <div className="container" style={{ position: "relative", zIndex: 1 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 32 }}>
+            <div style={{ maxWidth: 320 }}>
+              <a href="#" className="nav-logo" style={{ display: "inline-block", marginBottom: 18 }}>
+                <Image src={accedaLogo} alt="Acceda logo" height={38} style={{ width: "auto" }} />
+              </a>
+              <p style={{ fontSize: 13, lineHeight: 1.65, color: "var(--text-secondary)", marginBottom: 0 }}>
+                ACCEDA is a trusted compliance partner for enterprise engineering teams. We automate digital accessibility to ensure WCAG 2.1 AA, Section 508, and ADA Title II conformance across large product portfolios.
+              </p>
+            </div>
+            <nav aria-label="Footer navigation" style={{ display: "flex", gap: 28, flexWrap: "wrap", alignItems: "center", marginTop: 8 }}>
+              {[
+                { label: "Privacy Policy",        href: "/privacy" },
+                { label: "Terms of Service",       href: "/terms" },
+                { label: "Security",               href: "#" },
+                { label: "Accessibility Statement",href: "/accessibility" },
+              ].map(l => (
+                <a
+                  key={l.label}
+                  href={l.href}
+                  style={{ fontSize: 13, color: "var(--text-muted)", textDecoration: "none", transition: "color 0.2s" }}
+                  onMouseOver={e => e.currentTarget.style.color = "#fff"}
+                  onMouseOut={e => e.currentTarget.style.color = "var(--text-muted)"}
+                >
+                  {l.label}
+                </a>
               ))}
-            </div>
-            <div style={{ fontSize: 12, color: "var(--gray-3)" }}>
-              © 2026 Acceda. All rights reserved.
-            </div>
+            </nav>
+          </div>
+          <div style={{ fontSize: 12, color: "var(--text-muted)", marginTop: 40, paddingTop: 20, borderTop: "1px solid rgba(255,255,255,0.04)" }}>
+            © 2026 ACCEDA. All rights reserved.
           </div>
         </div>
       </footer>
