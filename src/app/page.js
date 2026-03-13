@@ -1383,11 +1383,11 @@ const var_text_dark = "#0F1729";
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 const features = [
-  { icon: <IconScan color="#1F4FD8" />,   title: "Initiate",              body: "Deep-crawl your web applications for WCAG violations. Every page, every state, every interaction — surfaced and prioritized automatically." },
+  { icon: <IconScan color="#1F4FD8" />,   title: "Detection",              body: "Deep-crawl your web applications for WCAG violations. Every page, every state, every interaction — surfaced and prioritized automatically." },
   { icon: <IconCode color="#1F4FD8" />,   title: "Review",               body: "Receive exact code diffs and step-by-step implementation guides for every finding. Your engineers ship fixes in minutes, not sprints." },
-  { icon: <IconDoc color="#1F4FD8" />,    title: "Reports",           body: "Auto-compile your full audit history into compliance-ready Voluntary Product Accessibility Templates on demand." },
+  { icon: <IconReview color="#1F4FD8" />, title: "Remediation",            body: "Structured workflows for ambiguous findings automated scanners can't confidently classify. Clarity at every decision point." },
+  { icon: <IconDoc color="#1F4FD8" />,    title: "Report",           body: "Auto-compile your full audit history into compliance-ready Voluntary Product Accessibility Templates on demand." },
   { icon: <IconGate color="#1F4FD8" />,   title: "CI/CD",                body: "Block non-compliant code from merging. Accessibility guardrails integrate directly into the pipeline your team already uses." },
-  { icon: <IconReview color="#1F4FD8" />, title: "Remediate",            body: "Structured workflows for ambiguous findings automated scanners can't confidently classify. Clarity at every decision point." },
   { icon: <IconShield color="#1F4FD8" />, title: "Audio & Video Captions",   body: "Automatically transcribe and caption media assets. Every video and audio file — made accessible without manual effort." },
 ];
 
