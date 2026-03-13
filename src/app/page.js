@@ -1444,7 +1444,7 @@ export default function AccedaLandingPage() {
             { label: "Use Cases",  href: "#use-cases" },
             { label: "Compliance", href: "#compliance" },
             { label: "Pricing",    href: "#cta" },
-            { label: "Docs",       href: "#" },
+            { label: "Docs",       href: "#footer" },
           ].map(l => (
             <li key={l.label}>
               <a href={l.href} onClick={() => setMobileMenuOpen(false)}>{l.label}</a>
@@ -1909,7 +1909,7 @@ export default function AccedaLandingPage() {
           FOOTER
       ════════════════════════════════════════════════════════ */}
       </main>
-      <footer style={{ position: "relative", overflow: "hidden", background: "var(--surface-darker)", borderTop: "1px solid var(--border)", padding: "52px 0" }}>
+      <footer id="footer" style={{ position: "relative", overflow: "hidden", background: "var(--surface-darker)", borderTop: "1px solid var(--border)", padding: "52px 0" }}>
         <div className="grid-bg" style={{ opacity: 0.04 }} />
         {/* Subtle footer glows */}
         <div aria-hidden="true" style={{
