@@ -1253,8 +1253,8 @@ function InteractiveProblemTerminal() {
             { t: "FAIL", c: "#FF4D6A", msg: "color-contrast (17 elements)" },
             { t: "WARN", c: "#FFAA2C", msg: "image-alt — needs-review" },
             { t: "WARN", c: "#FFAA2C", msg: "label — needs-review" },
-            { t: "INFO", c: "rgba(255,255,255,0.25)", msg: "aria-hidden-focus — manual check required" },
-            { t: "INFO", c: "rgba(255,255,255,0.25)", msg: "link-name — manual check required" },
+            { t: "INFO", c: "var(--text-muted)", msg: "aria-hidden-focus — manual check required" },
+            { t: "INFO", c: "var(--text-muted)", msg: "link-name — manual check required" },
           ].map((l, i) => (
             <motion.div 
               key={i} 
@@ -1323,7 +1323,7 @@ export default function AccedaLandingPage() {
     <>
       <FontLoader />
       <a href="#main-content" className="skip-link">Skip to main content</a>
-      <div className="noise" aria-hidden="true" />
+      <div className="noise" />
 
       <main id="main-content">
         {/* ════════════════════════════════════════════════════════
@@ -1362,7 +1362,7 @@ export default function AccedaLandingPage() {
           aria-expanded={mobileMenuOpen}
           aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
         >
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true" focusable="false">
             {mobileMenuOpen ? <path d="M18 6L6 18M6 6l12 12"/> : <path d="M4 6h16M4 12h16M4 18h16"/>}
           </svg>
         </button>
@@ -1372,19 +1372,19 @@ export default function AccedaLandingPage() {
           HERO — Dark navy, full brand drama
       ════════════════════════════════════════════════════════ */}
       <section
-        id="main-content"
+        id="hero"
         tabIndex="-1"
         style={{ position: "relative", overflow: "hidden", paddingTop: 160, paddingBottom: 130, background: "var(--surface-darker)" }}
       >
-        <div className="grid-bg" aria-hidden="true" />
+        <div className="grid-bg" />
         {/* Dual radial glows — blue left, green right */}
-        <div aria-hidden="true" style={{
+        <div style={{
           position: "absolute", top: "-10%", left: "20%",
           width: 700, height: 600,
           background: "radial-gradient(ellipse, rgba(31,79,216,0.13) 0%, transparent 65%)",
           pointerEvents: "none",
         }}/>
-        <div aria-hidden="true" style={{
+        <div style={{
           position: "absolute", bottom: "0%", right: "5%",
           width: 400, height: 400,
           background: "radial-gradient(ellipse, rgba(16,178,108,0.08) 0%, transparent 65%)",
@@ -1508,7 +1508,7 @@ export default function AccedaLandingPage() {
           <p style={{ textAlign: "center", fontSize: 11.5, color: "var(--electric)", letterSpacing: "0.13em", textTransform: "uppercase", fontWeight: 700, marginBottom: 28 }}>
             Purpose-built for high-compliance industries
           </p>
-          <div className="logo-row" role="list">
+          <div className="logo-row">
             {[
               { label: "Financial Services", color: "var(--electric)" },
               { label: "Gov & Defense",      color: "var(--green)" },
@@ -1516,7 +1516,7 @@ export default function AccedaLandingPage() {
               { label: "Enterprise SaaS",    color: "var(--yellow)" },
               { label: "E-Commerce",         color: "#FF4D6A" },
             ].map(l => (
-              <div key={l.label} className="logo-item" role="listitem">
+              <div key={l.label} className="logo-item">
                 <span style={{ width: 6, height: 6, borderRadius: "50%", background: l.color, flexShrink: 0 }} aria-hidden="true" />
                 {l.label}
               </div>
@@ -1530,7 +1530,7 @@ export default function AccedaLandingPage() {
       ════════════════════════════════════════════════════════ */}
       <section style={{ background: "var(--surface-light)", padding: "clamp(60px, 10vw, 100px) 0" }} aria-label="Platform statistics">
         <div className="container">
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 20 }} role="list">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 20 }}>
             {stats.map((s, i) => (
               <FadeUp key={i} delay={i * 0.12} style={{ height: "100%" }}>
                 <InteractiveStatCard {...s} />
@@ -1759,9 +1759,9 @@ export default function AccedaLandingPage() {
         style={{ position: "relative", overflow: "hidden", padding: "clamp(80px, 10vw, 100px) 0", background: "var(--surface-darker)" }}
         aria-labelledby="cta-heading"
       >
-        <div className="grid-bg" aria-hidden="true" />
+        <div className="grid-bg" />
         {/* Dual radial glows — matching Hero style */}
-        <div aria-hidden="true" style={{
+        <div style={{
           position: "absolute", top: "25%", left: "calc(5% - 40px)",
           width: 500, height: 400,
           background: "radial-gradient(ellipse, rgba(255,194,71,0.07) 0%, transparent 65%)",
@@ -1818,9 +1818,9 @@ export default function AccedaLandingPage() {
       ════════════════════════════════════════════════════════ */}
       </main>
       <footer style={{ position: "relative", overflow: "hidden", background: "var(--surface-darker)", borderTop: "1px solid var(--border)", padding: "52px 0" }}>
-        <div className="grid-bg" aria-hidden="true" style={{ opacity: 0.04 }} />
+        <div className="grid-bg" style={{ opacity: 0.04 }} />
         {/* Subtle footer glows */}
-        <div aria-hidden="true" style={{
+        <div style={{
           position: "absolute", bottom: "-10%", right: "-5%",
           width: 500, height: 400,
           background: "radial-gradient(ellipse, rgba(255,194,71,0.06) 0%, transparent 65%)",
