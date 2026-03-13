@@ -688,7 +688,7 @@ function CountdownClock({ targetDate, compact = false, large = false, numberColo
       transition={{ type: "spring", stiffness: 400, damping: 25 }}
       style={{ 
         display: "flex", flexDirection: "column", alignItems: "center", 
-        minWidth: compact ? 34 : (large ? 70 : 44),
+        minWidth: compact ? 34 : (large ? "clamp(55px, 15vw, 75px)" : 44),
         cursor: "default"
       }}
     >
@@ -718,14 +718,14 @@ function CountdownClock({ targetDate, compact = false, large = false, numberColo
   const Separator = () => (
     <span style={{ 
       opacity: 0.3, 
-      fontSize: compact ? 12 : (large ? 24 : 16), 
-      marginTop: compact ? -10 : (large ? -22 : -14),
+      fontSize: compact ? 12 : (large ? "clamp(18px, 4vw, 24px)" : 16), 
+      marginTop: compact ? -10 : (large ? "clamp(-18px, -4vw, -22px)" : -14),
       color: numberColor || "inherit"
     }}>:</span>
   );
 
   return (
-    <div style={{ display: "flex", gap: compact ? 8 : (large ? "clamp(12px, 3vw, 32px)" : 12), alignItems: "center" }}>
+    <div style={{ display: "flex", gap: compact ? 8 : (large ? "clamp(4px, 2vw, 32px)" : 12), alignItems: "center", justifyContent: "center" }}>
       <Item val={timeLeft.days} label="Days" />
       <Separator />
       <Item val={timeLeft.hours} label="Hrs" />
@@ -1661,10 +1661,11 @@ export default function AccedaLandingPage() {
             <div className="compliance-wrapper" style={{
               background: "#fff",
               border: "1px solid var(--border-light)",
-              borderRadius: 20, padding: "clamp(32px, 6vw, 56px) clamp(24px, 7vw, 64px)",
+              borderRadius: 20, padding: "clamp(24px, 5vw, 56px) clamp(12px, 3vw, 64px)",
               display: "flex", justifyContent: "space-between", alignItems: "center",
-              flexWrap: "wrap", gap: "clamp(32px, 5vw, 48px)",
+              flexWrap: "wrap", gap: "clamp(16px, 4vw, 48px)",
               boxShadow: "0 4px 32px rgba(10,42,102,0.08)",
+              width: "100%", overflow: "hidden"
             }}>
               <div style={{ flex: 1, minWidth: 260 }}>
                 <div className="eyebrow blue" style={{ display: "flex" }}>Compliance Coverage</div>
