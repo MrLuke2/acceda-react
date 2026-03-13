@@ -197,8 +197,8 @@ const FontLoader = () => (
     }
     .eyebrow.yellow { color: var(--yellow); }
     .eyebrow.yellow::before { background: var(--yellow); }
-    .eyebrow.blue { color: var(--electric); }
-    .eyebrow.blue::before { background: var(--electric); }
+    .eyebrow.blue { color: var(--signal); }
+    .eyebrow.blue::before { background: var(--signal); }
 
     .section-title {
       font-family: var(--font-display); font-size: clamp(30px,4vw,52px);
@@ -479,52 +479,52 @@ const FontLoader = () => (
 
 // ─── Icons ──────────────────────────────────────────────────────────────────
 const IconScan = ({ color = "var(--signal)" }) => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
     <path d="M3 6V3h3M14 3h3v3M17 14v3h-3M6 17H3v-3" stroke={color} strokeWidth="1.5" strokeLinecap="round"/>
     <rect x="6" y="6" width="8" height="8" rx="1.5" stroke={color} strokeWidth="1.5"/>
     <path d="M8 10h4" stroke={color} strokeWidth="1.5" strokeLinecap="round"/>
   </svg>
 );
 const IconShield = ({ color = "var(--signal)" }) => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
     <path d="M10 2L4 4.5V9c0 3.87 2.62 7.25 6 8 3.38-.75 6-4.13 6-8V4.5L10 2Z" stroke={color} strokeWidth="1.5" strokeLinejoin="round"/>
     <path d="M7 10l2 2 4-4" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 const IconDoc = ({ color = "var(--signal)" }) => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
     <path d="M11 2H5a1 1 0 00-1 1v14a1 1 0 001 1h10a1 1 0 001-1V8l-5-6Z" stroke={color} strokeWidth="1.5" strokeLinejoin="round"/>
     <path d="M11 2v6h6M7 11h6M7 14h4" stroke={color} strokeWidth="1.5" strokeLinecap="round"/>
   </svg>
 );
 const IconCode = ({ color = "var(--signal)" }) => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
     <path d="M7 6L3 10l4 4M13 6l4 4-4 4M11 4l-2 12" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 const IconReview = ({ color = "var(--signal)" }) => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
     <circle cx="10" cy="10" r="7" stroke={color} strokeWidth="1.5"/>
     <path d="M10 7v3.5l2.5 1.5" stroke={color} strokeWidth="1.5" strokeLinecap="round"/>
   </svg>
 );
 const IconGate = ({ color = "var(--signal)" }) => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true" focusable="false">
     <path d="M4 10h12M4 10l3-3M4 10l3 3M16 10l-3-3M16 10l-3 3" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 const IconArrow = () => (
-  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" focusable="false">
     <path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 const IconCheck = ({ color = "#10B26C", size = 14 }) => (
-  <svg width={size} height={size} viewBox="0 0 14 14" fill="none" aria-hidden="true">
+  <svg width={size} height={size} viewBox="0 0 14 14" fill="none" aria-hidden="true" focusable="false">
     <path d="M2 7l4 4 6-7" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 const IconX = () => (
-  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" focusable="false">
     <path d="M3 3l8 8M11 3l-8 8" stroke="#FF4D6A" strokeWidth="1.6" strokeLinecap="round"/>
   </svg>
 );
@@ -567,8 +567,8 @@ function ScannerViz() {
 
   return (
     <div
-      role="img"
-      aria-label="ACCEDA scan engine showing detected accessibility violations being automatically fixed"
+      role="region"
+      aria-label="ACCEDA scan engine visualization"
       style={{
         background: "rgba(8,14,34,0.9)", border: "1px solid rgba(255,255,255,0.09)",
         borderRadius: 16, overflow: "hidden",
@@ -836,6 +836,7 @@ function InteractiveStatCard({ num, suffix, label, color, bg, border }) {
     >
       {/* Spotlight Glow - Themed to card type */}
       <motion.div
+        aria-hidden="true"
         style={{
           position: "absolute", top: 0, left: 0, right: 0, bottom: 0, zIndex: 0, pointerEvents: "none",
           backgroundImage: useTransform(
@@ -911,6 +912,7 @@ function InteractiveFAQItem({ faq, index, isOpen, toggleOpen }) {
       >
         {/* Spotlight Glow - Warm Blue Tint */}
         <motion.div
+          aria-hidden="true"
           style={{
             position: "absolute", top: 0, left: 0, right: 0, bottom: 0, zIndex: 0, pointerEvents: "none",
             backgroundImage: useTransform(
@@ -956,7 +958,7 @@ function InteractiveFAQItem({ faq, index, isOpen, toggleOpen }) {
               display: "grid", placeItems: "center", flexShrink: 0,
             }}
           >
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
               <path d="M6 9l6 6 6-6"/>
             </svg>
           </motion.div>
@@ -1024,6 +1026,7 @@ function InteractiveFeatureCard({ icon, title, body }) {
     >
       {/* Spotlight Glow */}
       <motion.div
+        aria-hidden="true"
         style={{
           position: "absolute",
           top: 0,
@@ -1104,6 +1107,7 @@ function InteractivePersonaCard({ role, title, body, index }) {
     >
       {/* Spotlight Glow - Teal Green */}
       <motion.div
+        aria-hidden="true"
         style={{
           position: "absolute",
           top: 0,
@@ -1187,6 +1191,7 @@ function InteractiveFormWrapper({ children }) {
     >
       {/* Spotlight Glow - Yellow */}
       <motion.div
+        aria-hidden="true"
         style={{
           position: "absolute",
           top: 0,
@@ -1236,6 +1241,7 @@ function InteractiveComplianceCard({ std }) {
       
       {/* Spotlight Glow - using the user requested FFC247 base with high transparency */}
       <motion.div
+        aria-hidden="true"
         style={{
           position: "absolute",
           top: 0, left: 0, right: 0, bottom: 0,
@@ -1420,9 +1426,9 @@ export default function AccedaLandingPage() {
     <>
       <FontLoader />
       <a href="#main-content" className="skip-link">Skip to main content</a>
-      <div className="noise" />
+      <div className="noise" aria-hidden="true" />
 
-      <main id="main-content">
+      <main id="main-content" tabIndex="-1">
         {/* ════════════════════════════════════════════════════════
             NAVIGATION
         ════════════════════════════════════════════════════════ */}
@@ -1470,18 +1476,17 @@ export default function AccedaLandingPage() {
       ════════════════════════════════════════════════════════ */}
       <section
         id="hero"
-        tabIndex="-1"
         style={{ position: "relative", overflow: "hidden", paddingTop: 160, paddingBottom: 130, background: "var(--surface-darker)" }}
       >
-        <div className="grid-bg" />
+        <div className="grid-bg" aria-hidden="true" />
         {/* Dual radial glows — blue left, green right */}
-        <div style={{
+        <div aria-hidden="true" style={{
           position: "absolute", top: "-10%", left: "20%",
           width: 700, height: 600,
           background: "radial-gradient(ellipse, rgba(31,79,216,0.13) 0%, transparent 65%)",
           pointerEvents: "none",
         }}/>
-        <div style={{
+        <div aria-hidden="true" style={{
           position: "absolute", bottom: "0%", right: "5%",
           width: 400, height: 400,
           background: "radial-gradient(ellipse, rgba(16,178,108,0.08) 0%, transparent 65%)",
@@ -1846,9 +1851,9 @@ export default function AccedaLandingPage() {
         style={{ position: "relative", overflow: "hidden", padding: "clamp(80px, 10vw, 100px) 0", background: "var(--surface-darker)" }}
         aria-labelledby="cta-heading"
       >
-        <div className="grid-bg" />
+        <div className="grid-bg" aria-hidden="true" />
         {/* Dual radial glows — matching Hero style */}
-        <div style={{
+        <div aria-hidden="true" style={{
           position: "absolute", top: "25%", left: "calc(5% - 40px)",
           width: 500, height: 400,
           background: "radial-gradient(ellipse, rgba(255,194,71,0.07) 0%, transparent 65%)",
@@ -1907,7 +1912,7 @@ export default function AccedaLandingPage() {
       <footer style={{ position: "relative", overflow: "hidden", background: "var(--surface-darker)", borderTop: "1px solid var(--border)", padding: "52px 0" }}>
         <div className="grid-bg" style={{ opacity: 0.04 }} />
         {/* Subtle footer glows */}
-        <div style={{
+        <div aria-hidden="true" style={{
           position: "absolute", bottom: "-10%", right: "-5%",
           width: 500, height: 400,
           background: "radial-gradient(ellipse, rgba(255,194,71,0.06) 0%, transparent 65%)",

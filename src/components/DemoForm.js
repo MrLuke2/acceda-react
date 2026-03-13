@@ -53,7 +53,7 @@ export default function DemoForm() {
         display: "grid", placeItems: "center",
         margin: "0 auto 20px",
       }}>
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true" focusable="false">
           <path d="M4 11l5 5 9-9" stroke="#00D4AA" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
         </svg>
       </div>
