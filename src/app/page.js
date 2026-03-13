@@ -589,7 +589,7 @@ function ScannerViz() {
         </span>
         <button
           onClick={() => setIsPaused(!isPaused)}
-          aria-label={isPaused ? "Resume scan animation" : "Pause scan animation"}
+          aria-label={isPaused ? "RESUME — resume scan animation" : "PAUSE — pause scan animation"}
           style={{
             background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)",
             borderRadius: 6, color: "#fff", fontSize: 10, cursor: "pointer",
