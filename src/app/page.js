@@ -104,6 +104,18 @@ const FontLoader = () => (
       line-height: 1.6;
     }
 
+    .platform-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 640px) {
+      .platform-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (min-width: 1024px) {
+      .platform-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
     /* ── Scrollbar ── */
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: var(--surface-darker); }
@@ -1591,7 +1603,7 @@ export default function AccedaLandingPage() {
             </div>
           </FadeUp>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 16 }}>
+          <div className="platform-grid">
             {features.map((f, i) => (
               <FadeUp key={i} delay={i * 0.07} style={{ height: "100%" }}>
                 <InteractiveFeatureCard icon={f.icon} title={f.title} body={f.body} />

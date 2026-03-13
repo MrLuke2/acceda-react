@@ -22,22 +22,13 @@ const FontLoader = () => (
       --soft-gray:     #F4F6F8;
       --ui-gray:       #AAB4C2;
 
-      --surface-dark:    #0C1F4A;
       --surface-darker:  #080E22;
-      --surface-card:    rgba(10,42,102,0.55);
-      --surface-light:   #F4F6F8;
-      --surface-white:   #FFFFFF;
-      --surface-cream:   #F8FAFF;
-
       --text-primary:    #FFFFFF;
       --text-secondary:  #CBD5E1;
       --text-muted:      #94A3B8;
-      --text-dark:       #0F1729;
-      --text-dark-sub:   #374151;
 
       --font-display: 'Space Grotesk', sans-serif;
       --font-body:    'DM Sans', sans-serif;
-      --font-mono:    'JetBrains Mono', monospace;
     }
 
     body {
@@ -60,8 +51,6 @@ const FontLoader = () => (
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       display: flex; align-items: center; justify-content: space-between;
       padding: 0 48px; height: 68px;
-      background: rgba(8,14,34,0.7); backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
     }
     .nav-logo { display: flex; align-items: center; }
 
@@ -77,12 +66,12 @@ const FontLoader = () => (
     .eyebrow {
       font-family: var(--font-body); font-size: 11px; font-weight: 600;
       letter-spacing: 0.12em; text-transform: uppercase;
-      color: var(--green); margin-bottom: 16px;
+      color: var(--yellow); margin-bottom: 16px;
       display: flex; align-items: center; gap: 10px;
     }
     .eyebrow::before {
       content: ''; display: block; width: 20px; height: 1.5px;
-      background: var(--green);
+      background: var(--yellow);
     }
 
     .section-title {
@@ -93,13 +82,13 @@ const FontLoader = () => (
 
     .statement-content section { margin-bottom: 56px; }
     .statement-content h2 { 
-      font-family: var(--font-display); font-size: 22px; font-weight: 700;
+      font-family: var(--font-display); font-size: 20px; font-weight: 700;
       color: var(--electric); margin-bottom: 16px; letter-spacing: -0.01em;
     }
-    .statement-content p { font-size: 16px; line-height: 1.8; color: var(--text-secondary); margin-bottom: 16px; }
+    .statement-content p { font-size: 15px; line-height: 1.8; color: var(--text-secondary); margin-bottom: 16px; }
     .statement-content ul { list-style: none; padding: 0; }
-    .statement-content li { margin-bottom: 12px; display: flex; align-items: flex-start; gap: 10px; color: var(--text-secondary); }
-    .statement-content li::before { content: '→'; color: var(--green); flex-shrink: 0; }
+    .statement-content li { margin-bottom: 12px; display: flex; align-items: flex-start; gap: 10px; color: var(--text-secondary); font-size: 14.5px; }
+    .statement-content li::before { content: '•'; color: var(--yellow); flex-shrink: 0; }
 
     footer { 
       padding: 60px 0; border-top: 1px solid rgba(255,255,255,0.06);
@@ -108,7 +97,7 @@ const FontLoader = () => (
   `}</style>
 );
 
-export default function AccessibilityStatement() {
+export default function PrivacyPolicy() {
   const [navScrolled, setNavScrolled] = useState(false);
   const { scrollY } = useScroll();
 
@@ -126,11 +115,11 @@ export default function AccessibilityStatement() {
       <div aria-hidden="true" style={{
         position: "fixed", top: "10%", left: "50%", transform: "translateX(-50%)",
         width: 800, height: 600,
-        background: "radial-gradient(ellipse, rgba(31,79,216,0.12) 0%, transparent 70%)",
+        background: "radial-gradient(ellipse, rgba(255,194,71,0.06) 0%, transparent 70%)",
         pointerEvents: "none", zIndex: -1
       }}/>
 
-      <nav className="nav" style={{ background: navScrolled ? "rgba(8,14,34,0.94)" : "rgba(8,14,34,0.7)" }}>
+      <nav className="nav" style={{ background: navScrolled ? "rgba(8,14,34,0.94)" : "rgba(8,14,34,0.7)", backdropFilter: "blur(12px)", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
         <a href="/" className="nav-logo">
           <Image src={accedaLogo} alt="Acceda Logo" height={38} style={{ width: "auto" }} />
         </a>
@@ -144,8 +133,8 @@ export default function AccessibilityStatement() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <div className="eyebrow">Legal & Compliance</div>
-            <h1 className="section-title">Accessibility Statement</h1>
+            <div className="eyebrow">Enterprise Trust</div>
+            <h1 className="section-title">Privacy Policy</h1>
           </motion.div>
           
           <div className="statement-content">
@@ -154,12 +143,9 @@ export default function AccessibilityStatement() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
             >
-              <h2>Our Commitment</h2>
+              <h2>Commitment to Privacy</h2>
               <p>
-                Acceda is committed to ensuring digital accessibility for people with disabilities. We are continually improving the user experience for everyone and applying the relevant accessibility standards to achieve WCAG 2.1 AA and WCAG 2.2 AA conformance across our entire platform.
-              </p>
-              <p>
-                Our mission is to enable other organizations to achieve the same level of accessibility we maintain for our own products. We believe that accessibility is a journey, not a destination, and we are dedicated to leading by example.
+                At Acceda, we believe that privacy is a fundamental human right. Our platform is designed with security and data minimization at its core, ensuring that your organization's data remains protected while you focus on achieving compliance.
               </p>
             </motion.section>
 
@@ -168,17 +154,14 @@ export default function AccessibilityStatement() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              <h2>Feedback & Support</h2>
+              <h2>Information We Collect</h2>
               <p>
-                We welcome your feedback on the accessibility of Acceda. If you encounter any accessibility barriers on our platform, please contact us:
+                We collect only the information necessary to provide our services and ensure a secure user experience:
               </p>
               <ul>
-                <li>
-                  Email: <a href="mailto:accessibility@useacceda.com" style={{ color: "var(--green)", textDecoration: "underline" }}>accessibility@useacceda.com</a>
-                </li>
-                <li>
-                  Response Time: We aim to respond to accessibility feedback within 2 business days.
-                </li>
+                <li>Account Information: Name, work email, and organization details provided during sign-up or demo requests.</li>
+                <li>Technical Data: Log data, IP addresses, and device information required for security monitoring and platform performance.</li>
+                <li>Usage Patterns: Anonymized data on how our platform is used to help us improve remediation guides and scan accuracy.</li>
               </ul>
             </motion.section>
 
@@ -187,12 +170,12 @@ export default function AccessibilityStatement() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
             >
-              <h2>Known Limitations</h2>
+              <h2>How We Protect Your Data</h2>
               <p>
-                Currently, there are no known limitations or outstanding critical accessibility violations on our primary landing page. We actively scan and remediate our application infrastructure using our own compliance platform.
+                Acceda employs enterprise-grade security controls to safeguard your information, including end-to-end encryption for data in transit and at rest. We undergo regular SOC 2 Type II audits to verify the effectiveness of our security posture.
               </p>
               <p>
-                If you find an issue, please let us know so we can fix it immediately.
+                We do not sell your personal or organizational data to third parties. Our data processing is limited to providing and improving the Acceda platform.
               </p>
             </motion.section>
 
@@ -201,10 +184,14 @@ export default function AccessibilityStatement() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
-              <h2>Audit Information</h2>
+              <h2>Contact Our Privacy Team</h2>
               <p>
-                This statement was created on March 13, 2026. Internal audits are performed weekly using the Acceda scan engine. We also undergo periodic third-party reviews to ensure our assessment remains accurate and objective.
+                If you have any questions about our privacy practices or wish to exercise your data rights, please contact us at:
               </p>
+              <ul>
+                <li>Email: privacy@useacceda.com</li>
+                <li>Response Time: Within 2 business days.</li>
+              </ul>
             </motion.section>
           </div>
         </div>

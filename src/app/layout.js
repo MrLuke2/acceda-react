@@ -1,3 +1,7 @@
+export const viewport = {
+  themeColor: "#0A2A66",
+};
+
 export const metadata = {
   title: "Acceda — AI-Powered Accessibility Compliance Platform | WCAG 2.1 AA, Section 508, ADA",
   description: "Acceda uses AI to scan, fix, and verify WCAG 2.1 AA, Section 508, and ADA Title II compliance across your entire digital product. Auto-generate VPATs, integrate CI/CD gates, and ship accessible software faster. Trusted by enterprise teams.",
