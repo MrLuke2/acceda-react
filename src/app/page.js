@@ -422,9 +422,9 @@ const FontLoader = () => (
     }
 
     @media (max-width: 1024px) {
-      .hero-wrapper   { flex-direction: column; text-align: center; gap: 50px !important; }
+      .hero-wrapper   { flex-direction: column; text-align: center; gap: 80px !important; }
       .hero-content   { align-items: center; }
-      .hero-scanner   { flex: 1 !important; width: 100%; max-width: 480px; align-self: center; }
+      .hero-scanner   { flex: 1 !important; width: 100%; max-width: 480px; align-self: center; margin-top: 60px; }
       .problem-wrapper { flex-direction: column; gap: 50px !important; text-align: center; }
       .compliance-wrapper { flex-direction: column; gap: 40px !important; text-align: center; padding: 40px 32px !important; }
     }
@@ -694,7 +694,7 @@ function CountdownClock({ targetDate, compact = false, large = false, numberColo
     >
       <span style={{ 
         fontFamily: "var(--font-mono)", 
-        fontSize: compact ? 14 : (large ? 36 : 18), 
+        fontSize: compact ? 14 : (large ? "clamp(24px, 5vw, 36px)" : 18), 
         fontWeight: 800, 
         color: numberColor || (compact ? "inherit" : "var(--yellow)"),
         lineHeight: 1
@@ -702,11 +702,11 @@ function CountdownClock({ targetDate, compact = false, large = false, numberColo
         {val.toString().padStart(2, "0")}
       </span>
       <span style={{ 
-        fontSize: compact ? 9 : (large ? 10 : 9), 
+        fontSize: compact ? 9 : (large ? 9 : 9), 
         textTransform: "uppercase", 
         letterSpacing: "0.08em", 
         opacity: 0.6, 
-        marginTop: compact ? 2 : (large ? 8 : 2),
+        marginTop: compact ? 2 : (large ? 4 : 2),
         fontWeight: large ? 700 : 400,
         textShadow: large ? "0 1px 1px rgba(0,0,0,0.1)" : "none"
       }}>
@@ -725,7 +725,7 @@ function CountdownClock({ targetDate, compact = false, large = false, numberColo
   );
 
   return (
-    <div style={{ display: "flex", gap: compact ? 8 : (large ? 32 : 12), alignItems: "center" }}>
+    <div style={{ display: "flex", gap: compact ? 8 : (large ? "clamp(12px, 3vw, 32px)" : 12), alignItems: "center" }}>
       <Item val={timeLeft.days} label="Days" />
       <Separator />
       <Item val={timeLeft.hours} label="Hrs" />
@@ -1431,6 +1431,7 @@ export default function AccedaLandingPage() {
               </motion.div>
 
               <motion.div
+                className="compliance-badges"
                 style={{ display: "flex", gap: 8, flexWrap: "wrap" }}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -1652,7 +1653,7 @@ export default function AccedaLandingPage() {
       ════════════════════════════════════════════════════════ */}
       <section
         id="compliance"
-        style={{ padding: "110px 0", background: "#6B7280", borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)" }}
+        style={{ padding: "clamp(60px, 10vw, 110px) 0", background: "var(--surface-cream)", borderTop: "1px solid var(--border-light)", borderBottom: "1px solid var(--border-light)" }}
         aria-labelledby="compliance-heading"
       >
         <div className="container">
@@ -1660,9 +1661,9 @@ export default function AccedaLandingPage() {
             <div className="compliance-wrapper" style={{
               background: "#fff",
               border: "1px solid var(--border-light)",
-              borderRadius: 20, padding: "56px 64px",
+              borderRadius: 20, padding: "clamp(32px, 6vw, 56px) clamp(24px, 7vw, 64px)",
               display: "flex", justifyContent: "space-between", alignItems: "center",
-              flexWrap: "wrap", gap: 48,
+              flexWrap: "wrap", gap: "clamp(32px, 5vw, 48px)",
               boxShadow: "0 4px 32px rgba(10,42,102,0.08)",
             }}>
               <div style={{ flex: 1, minWidth: 260 }}>
@@ -1694,8 +1695,7 @@ export default function AccedaLandingPage() {
                     <CountdownClock targetDate="2026-04-24T00:00:00" large numberColor="#000" />
                   </div>
                   <div style={{ 
-                    fontSize: 15.5, color: "#FFC247", opacity: 1, fontWeight: 500,
-                    textShadow: "0 1px 1px rgba(0,0,0,0.15)"
+                    fontSize: 15.5, color: "var(--trust)", opacity: 1, fontWeight: 500,
                   }}>
                     ADA Title II Mandatory Compliance Transition
                   </div>
@@ -1711,17 +1711,18 @@ export default function AccedaLandingPage() {
                 ].map((c, i) => (
                   <div key={i} style={{ display: "flex", alignItems: "center", gap: 14 }}>
                     <motion.div 
-                      whileHover={{ scale: 1.2 }}
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
                       transition={{ type: "spring", stiffness: 400, damping: 25 }}
                       style={{
-                        width: 28, height: 28, borderRadius: 8,
+                        width: 44, height: 44, borderRadius: 10,
                         background: "rgba(16,178,108,0.1)",
                         border: "1px solid rgba(16,178,108,0.25)",
                         display: "grid", placeItems: "center", flexShrink: 0,
                         cursor: "pointer"
                       }}
                     >
-                      <IconCheck size={13} />
+                      <IconCheck size={16} />
                     </motion.div>
                     <div>
                       <div style={{ fontSize: 14.5, fontWeight: 700, color: "var(--text-dark)" }}>{c.label}</div>
@@ -1732,46 +1733,6 @@ export default function AccedaLandingPage() {
               </div>
             </div>
           </FadeUp>
-        </div>
-      </section>
-      
-      {/* ════════════════════════════════════════════════════════
-          FAQ SECTION — Critical for AEO / AI Search
-      ════════════════════════════════════════════════════════ */}
-      <section id="faq" aria-labelledby="faq-heading" style={{ padding: "80px 0", background: "var(--surface-cream)", borderBottom: "1px solid var(--border-light)" }}>
-        <div className="container" style={{ maxWidth: 800 }}>
-          <div style={{ textAlign: "center", marginBottom: 52 }}>
-            <div className="eyebrow" style={{ color: "var(--navy)", justifyContent: "center" }}>Support</div>
-            <h2 id="faq-heading" style={{ 
-              fontFamily: "var(--font-display)", fontSize: "clamp(26px, 4vw, 42px)", 
-              fontWeight: 800, color: "var(--text-dark)", letterSpacing: "-0.03em" 
-            }}>
-              Frequently Asked Questions
-            </h2>
-          </div>
-          
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            {faqs.map((f, i) => (
-              <details key={i} style={{ 
-                background: "#fff", border: "1px solid var(--border-light)", 
-                borderRadius: 12, padding: "20px 24px", cursor: "pointer" 
-              }}>
-                <summary style={{ 
-                  fontSize: 16.5, fontWeight: 700, color: "var(--text-dark)", 
-                  listStyle: "none", outline: "none", display: "flex", justifyContent: "space-between", alignItems: "center"
-                }}>
-                  {f.q}
-                  <span style={{ color: "var(--accent-primary)", fontSize: 20 }}>+</span>
-                </summary>
-                <p style={{ 
-                  marginTop: 16, fontSize: 15, lineHeight: 1.6, 
-                  color: "var(--text-dark-sub)", maxWidth: "90%" 
-                }}>
-                  {f.a}
-                </p>
-              </details>
-            ))}
-          </div>
         </div>
       </section>
 
