@@ -773,7 +773,7 @@ function AnimatedNumber({ target, suffix = "", duration = 1500, trigger = true }
   const [display, setDisplay] = useState(0);
   const [resetKey, setResetKey] = useState(0);
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
+  const inView = useInView(ref, { once: true, margin: "-10px" });
 
   useEffect(() => {
     if (!inView && resetKey === 0) return;
@@ -863,7 +863,7 @@ function InteractiveStatCard({ num, suffix, label, color, bg, border }) {
 // ─── FadeUp ─────────────────────────────────────────────────────────────────
 function FadeUp({ children, delay = 0, style = {} }) {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-60px" });
+  const inView = useInView(ref, { once: true, margin: "-10px" });
   return (
     <motion.div
       ref={ref}
