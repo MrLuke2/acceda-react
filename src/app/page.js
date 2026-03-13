@@ -299,6 +299,19 @@ const FontLoader = () => (
     }
     .feature-body-light { font-size: 13.5px; line-height: 1.7; color: var(--text-dark-sub); }
 
+    .compliance-card { box-shadow: 0 4px 16px rgba(10,42,102,0.05); }
+    .compliance-card-indicator {
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, #FFC247, #FF9900);
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .compliance-card:hover {
+      border-color: rgba(255,194,71,0.5) !important;
+      transform: translateY(-8px) !important;
+      box-shadow: 0 24px 48px rgba(255,194,71,0.16), inset 0 0 0 1px rgba(255,194,71,0.1) !important;
+    }
+    .compliance-card:hover .compliance-card-indicator { opacity: 1; }
+
     .persona-card {
       border: 1px solid var(--border-light); border-radius: 14px; padding: clamp(24px, 6vw, 36px);
       background: #fff; box-shadow: 0 4px 16px rgba(10,42,102,0.05);
@@ -459,6 +472,7 @@ const FontLoader = () => (
       .logo-row { gap: 24px; }
       .stat-card { padding: 24px; }
       .urgency-banner { flex-direction: column; text-align: center; gap: 8px; padding: 14px 16px; }
+      .hero-scanner { padding-top: 50px !important; }
     }
   `}</style>
 );
@@ -579,7 +593,8 @@ function ScannerViz() {
           style={{
             background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)",
             borderRadius: 6, color: "#fff", fontSize: 10, cursor: "pointer",
-            padding: "4px 8px", fontFamily: "var(--font-mono)", transition: "background 0.2s"
+            padding: "4px 8px", fontFamily: "var(--font-mono)", transition: "background 0.2s",
+            marginLeft: "auto"
           }}
           onMouseOver={e => e.currentTarget.style.background = "rgba(255,255,255,0.12)"}
           onMouseOut={e => e.currentTarget.style.background = "rgba(255,255,255,0.06)"}
@@ -587,7 +602,7 @@ function ScannerViz() {
           {isPaused ? "▶ RESUME" : "II PAUSE"}
         </button>
         <span style={{
-          marginLeft: "auto", width: 7, height: 7, borderRadius: "50%",
+          marginLeft: 12, width: 7, height: 7, borderRadius: "50%",
           background: done ? "#10B26C" : (scanning && !isPaused) ? "#FFAA2C" : "#1F4FD8",
           boxShadow: `0 0 0 3px ${done ? "rgba(16,178,108,0.2)" : (scanning && !isPaused) ? "rgba(255,170,44,0.2)" : "rgba(31,79,216,0.2)"}`,
           animation: (done || isPaused) ? "none" : "pulse-ring 1.5s ease-out infinite",
@@ -1193,6 +1208,88 @@ function InteractiveFormWrapper({ children }) {
   );
 }
 
+// ─── Interactive Compliance Card ─────────────────────────────────────────────
+function InteractiveComplianceCard({ std }) {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  function handleMouseMove({ currentTarget, clientX, clientY }) {
+    const { left, top } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
+  }
+
+  return (
+    <motion.div
+      onMouseMove={handleMouseMove}
+      initial="initial"
+      whileHover="hover"
+      className="compliance-card"
+      style={{
+        background: "#fff", border: "1px solid var(--border-light)", borderRadius: 16,
+        padding: "clamp(20px, 4vw, 28px) clamp(16px, 3vw, 24px)", display: "flex", flexDirection: "column", gap: 16,
+        transition: "border-color 0.3s, transform 0.25s, box-shadow 0.3s", cursor: "default",
+        position: "relative", overflow: "hidden", height: "100%"
+      }}
+    >
+      <div className="compliance-card-indicator" aria-hidden="true" />
+      
+      {/* Spotlight Glow - using the user requested FFC247 base with high transparency */}
+      <motion.div
+        style={{
+          position: "absolute",
+          top: 0, left: 0, right: 0, bottom: 0,
+          zIndex: 0, pointerEvents: "none",
+          backgroundImage: useTransform(
+            [mouseX, mouseY],
+            ([x, y]) => `radial-gradient(450px circle at ${x}px ${y}px, rgba(255,194,71,0.14), transparent 50%)`
+          )
+        }}
+      />
+
+      <div style={{ position: "relative", zIndex: 1, display: "flex", flexDirection: "column", gap: 16 }}>
+        <motion.div
+          variants={{
+            initial: { scale: 1, backgroundColor: std.bg, borderColor: std.border },
+            hover: { scale: 1.15, rotate: 6, backgroundColor: "rgba(255,194,71,0.12)", borderColor: "rgba(255,194,71,0.4)" }
+          }}
+          transition={{ type: "spring", stiffness: 400, damping: 10 }}
+          style={{
+            width: 44, height: 44, borderRadius: 12,
+            display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
+            color: std.color, border: "1px solid"
+          }}
+        >
+          <IconCheck size={18} color="currentColor" />
+        </motion.div>
+        
+        <div>
+          <motion.h4
+            variants={{
+              initial: { y: 0, color: "var(--text-dark)" },
+              hover: { y: -2, color: "#FF9900" }
+            }}
+            transition={{ duration: 0.2 }}
+            style={{ fontSize: "clamp(15px, 3vw, 16px)", fontWeight: 700, marginBottom: 6 }}
+          >
+            {std.label}
+          </motion.h4>
+          <motion.p
+            variants={{
+              initial: { opacity: 0.8 },
+              hover: { opacity: 1 }
+            }}
+            transition={{ duration: 0.2 }}
+            style={{ fontSize: "clamp(13px, 2.5vw, 14px)", color: "var(--text-dark-sub)", lineHeight: 1.5, marginBottom: 0 }}
+          >
+            {std.desc}
+          </motion.p>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 // ─── Interactive Problem Terminal ─────────────────────────────────────────────
 function InteractiveProblemTerminal() {
   const mouseX = useMotionValue(0);
@@ -1732,26 +1829,7 @@ export default function AccedaLandingPage() {
                   { label: "ADA Title II", desc: "Americans with Disabilities Act", bg: "var(--blue-dim)", border: "rgba(58,123,255,0.2)", color: "var(--trust)" },
                   { label: "SOC 2 Type II", desc: "Enterprise Data Security Standard", bg: "var(--blue-dim)", border: "rgba(58,123,255,0.2)", color: "var(--trust)" },
                 ].map((std) => (
-                  <motion.div 
-                    key={std.label}
-                    whileHover={{ y: -4, boxShadow: "0 12px 24px rgba(10,42,102,0.06)" }}
-                    style={{
-                      background: "#fff", border: "1px solid var(--border-light)", borderRadius: 16,
-                      padding: "clamp(20px, 4vw, 28px) clamp(16px, 3vw, 24px)", display: "flex", flexDirection: "column", gap: 16,
-                      transition: "all 0.3s ease", cursor: "default"
-                    }}
-                  >
-                    <div style={{
-                      width: 44, height: 44, borderRadius: 12, background: std.bg, border: `1px solid ${std.border}`,
-                      display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0
-                    }}>
-                      <IconCheck size={18} color={std.color} />
-                    </div>
-                    <div>
-                      <h4 style={{ fontSize: "clamp(15px, 3vw, 16px)", fontWeight: 700, color: "var(--text-dark)", marginBottom: 6 }}>{std.label}</h4>
-                      <p style={{ fontSize: "clamp(13px, 2.5vw, 14px)", color: "var(--text-dark-sub)", lineHeight: 1.5, marginBottom: 0 }}>{std.desc}</p>
-                    </div>
-                  </motion.div>
+                  <InteractiveComplianceCard key={std.label} std={std} />
                 ))}
               </div>
             </FadeUp>
