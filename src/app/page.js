@@ -700,13 +700,13 @@ function CountdownClock({ targetDate, compact = false, large = false, numberColo
       transition={{ type: "spring", stiffness: 400, damping: 25 }}
       style={{ 
         display: "flex", flexDirection: "column", alignItems: "center", 
-        minWidth: compact ? 34 : (large ? "clamp(55px, 15vw, 75px)" : 44),
+        minWidth: compact ? 34 : (large ? "clamp(42px, 12vw, 75px)" : 44),
         cursor: "default"
       }}
     >
       <span style={{ 
         fontFamily: "var(--font-mono)", 
-        fontSize: compact ? 14 : (large ? "clamp(24px, 5vw, 36px)" : 18), 
+        fontSize: compact ? 14 : (large ? "clamp(20px, 6vw, 36px)" : 18), 
         fontWeight: 800, 
         color: numberColor || (compact ? "inherit" : "var(--yellow)"),
         lineHeight: 1
@@ -714,7 +714,7 @@ function CountdownClock({ targetDate, compact = false, large = false, numberColo
         {val.toString().padStart(2, "0")}
       </span>
       <span style={{ 
-        fontSize: compact ? 9 : (large ? 9 : 9), 
+        fontSize: compact ? 9 : (large ? 10 : 9), 
         textTransform: "uppercase", 
         letterSpacing: "0.08em", 
         opacity: 0.6, 
@@ -730,14 +730,14 @@ function CountdownClock({ targetDate, compact = false, large = false, numberColo
   const Separator = () => (
     <span style={{ 
       opacity: 0.3, 
-      fontSize: compact ? 12 : (large ? "clamp(18px, 4vw, 24px)" : 16), 
-      marginTop: compact ? -10 : (large ? "clamp(-18px, -4vw, -22px)" : -14),
+      fontSize: compact ? 12 : (large ? "clamp(18px, 5vw, 24px)" : 16), 
+      marginTop: compact ? -10 : (large ? "clamp(-16px, -4vw, -22px)" : -14),
       color: numberColor || "inherit"
     }}>:</span>
   );
 
   return (
-    <div style={{ display: "flex", gap: compact ? 8 : (large ? "clamp(4px, 2vw, 32px)" : 12), alignItems: "center", justifyContent: "center" }}>
+    <div style={{ display: "flex", gap: compact ? 8 : (large ? "clamp(6px, 2vw, 24px)" : 12), alignItems: "center", justifyContent: "center" }}>
       <Item val={timeLeft.days} label="Days" />
       <Separator />
       <Item val={timeLeft.hours} label="Hrs" />
@@ -1662,92 +1662,101 @@ export default function AccedaLandingPage() {
       </section>
 
       {/* ════════════════════════════════════════════════════════
-          COMPLIANCE — Light section with Yellow urgency accent
+          COMPLIANCE — Refined & Mobile Optimized
       ════════════════════════════════════════════════════════ */}
       <section
         id="compliance"
-        style={{ padding: "clamp(60px, 10vw, 110px) 0", background: "var(--surface-cream)", borderTop: "1px solid var(--border-light)", borderBottom: "1px solid var(--border-light)" }}
+        style={{ padding: "clamp(80px, 12vw, 120px) 0", background: "var(--surface-cream)", borderTop: "1px solid var(--border-light)", borderBottom: "1px solid var(--border-light)", position: "relative", overflow: "hidden" }}
         aria-labelledby="compliance-heading"
       >
-        <div className="container">
+        <div className="container" style={{ position: "relative", zIndex: 1 }}>
           <FadeUp>
-            <div className="compliance-wrapper" style={{
-              background: "#fff",
-              border: "1px solid var(--border-light)",
-              borderRadius: 20, padding: "clamp(24px, 5vw, 56px) clamp(12px, 3vw, 64px)",
-              display: "flex", justifyContent: "space-between", alignItems: "center",
-              flexWrap: "wrap", gap: "clamp(16px, 4vw, 48px)",
-              boxShadow: "0 4px 32px rgba(10,42,102,0.08)",
-              width: "100%", overflow: "hidden"
-            }}>
-              <div style={{ flex: 1, minWidth: 260 }}>
-                <div className="eyebrow blue" style={{ display: "flex" }}>Compliance Coverage</div>
-                <h2 id="compliance-heading" className="section-title dark" style={{ fontSize: "clamp(26px,3.5vw,40px)", marginBottom: 16 }}>
-                  Every standard.<br/>One platform.
-                </h2>
-                <p className="section-body dark" style={{ fontSize: 15 }}>
-                  ACCEDA is purpose-built for the standards your legal and compliance teams require — with the evidence trail to back every claim.
-                </p>
-
-                {/* Yellow urgency block */}
-                {/* Countdown urgency block */}
-                <div style={{
-                  marginTop: 28,
-                  background: "var(--yellow-dim)",
-                  border: "1px solid var(--border-yellow)",
-                  borderRadius: 14, padding: "clamp(16px, 5vw, 24px) clamp(12px, 4vw, 24px)",
-                  display: "flex", flexDirection: "column", gap: 14, alignItems: "center",
-                  textAlign: "center"
-                }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <span style={{ fontSize: 20 }} aria-hidden="true">⚠️</span>
-                    <span style={{ fontSize: 13, fontWeight: 700, color: "#0C1F4A", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                      April 24, 2026 US Government Deadline
-                    </span>
-                  </div>
-                  <div style={{ color: "#0C1F4A", width: "100%", display: "flex", justifyContent: "center" }}>
-                    <CountdownClock targetDate="2026-04-24T00:00:00" large numberColor="#000" />
-                  </div>
-                  <div style={{ 
-                    fontSize: "clamp(14px, 4vw, 16px)", color: "var(--trust)", opacity: 1, fontWeight: 500,
-                    lineHeight: 1.4, overflowWrap: "break-word"
-                  }}>
-                    ADA Title II Mandatory Compliance Transition
-                  </div>
-                </div>
-              </div>
-
-              <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-                {[
-                  { label: "WCAG 2.1 Level AA", desc: "Web Content Accessibility Guidelines" },
-                  { label: "Section 508",         desc: "Federal Rehabilitation Act compliance" },
-                  { label: "ADA Title II",         desc: "Americans with Disabilities Act" },
-                  { label: "SOC 2 Type II",           desc: "Service Organization Control" },
-                ].map((c, i) => (
-                  <div key={i} style={{ display: "flex", alignItems: "center", gap: 14 }}>
-                    <motion.div 
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.95 }}
-                      transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                      style={{
-                        width: 44, height: 44, borderRadius: 10,
-                        background: "rgba(16,178,108,0.1)",
-                        border: "1px solid rgba(16,178,108,0.25)",
-                        display: "grid", placeItems: "center", flexShrink: 0,
-                        cursor: "pointer"
-                      }}
-                    >
-                      <IconCheck size={16} />
-                    </motion.div>
-                    <div>
-                      <div style={{ fontSize: 14.5, fontWeight: 700, color: "var(--text-dark)" }}>{c.label}</div>
-                      <div style={{ fontSize: 12, color: "var(--ui-gray)", marginTop: 1 }}>{c.desc}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+            <div style={{ textAlign: "center", marginBottom: "clamp(40px, 8vw, 64px)" }}>
+              <div className="eyebrow blue" style={{ justifyContent: "center" }}>Compliance Coverage</div>
+              <h2 id="compliance-heading" className="section-title dark" style={{ fontSize: "clamp(30px, 5vw, 44px)", marginBottom: 16 }}>
+                Every standard. One platform.
+              </h2>
+              <p className="section-body dark" style={{ fontSize: "clamp(15px, 2vw, 18px)", maxWidth: 640, margin: "0 auto", lineHeight: 1.6 }}>
+                ACCEDA is purpose-built for the standards your legal and compliance teams require — with the evidence trail to back every claim.
+              </p>
             </div>
           </FadeUp>
+
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 400px), 1fr))",
+            gap: "clamp(24px, 4vw, 40px)",
+            alignItems: "stretch"
+          }}>
+            {/* Countdown / Urgency Card */}
+            <FadeUp delay={0.1}>
+              <div style={{
+                background: "linear-gradient(135deg, #FFC247 0%, #FF9900 100%)",
+                borderRadius: 20, padding: "clamp(32px, 6vw, 48px) clamp(20px, 4vw, 48px)",
+                display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center",
+                textAlign: "center", boxShadow: "0 12px 40px rgba(255, 153, 0, 0.2)",
+                height: "100%", position: "relative", overflow: "hidden", color: "#0C1F4A"
+              }}>
+                <div style={{ position: "absolute", top: -50, right: -50, width: 250, height: 250, background: "rgba(255,255,255,0.25)", filter: "blur(40px)", borderRadius: "50%", pointerEvents: "none" }} />
+                
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 20 }}>
+                  <span style={{ fontSize: 24 }} aria-hidden="true">⚠️</span>
+                  <span style={{ fontSize: "clamp(13px, 3vw, 15px)", fontWeight: 800, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                    US Government Deadline
+                  </span>
+                </div>
+                
+                <h3 style={{ fontSize: "clamp(22px, 4vw, 28px)", fontWeight: 800, lineHeight: 1.1, marginBottom: 32, letterSpacing: "-0.02em", color: "#080E22" }}>
+                  April 24, 2026
+                </h3>
+
+                <div style={{ background: "rgba(255,255,255,0.25)", padding: "clamp(16px, 3vw, 24px)", borderRadius: 16, width: "100%", boxShadow: "inset 0 1px 12px rgba(0,0,0,0.06)" }}>
+                  <CountdownClock targetDate="2026-04-24T00:00:00" large numberColor="#0C1F4A" />
+                </div>
+
+                <p style={{ marginTop: 24, fontSize: "clamp(14px, 3.5vw, 16px)", fontWeight: 600, opacity: 0.9, lineHeight: 1.45, color: "#080E22" }}>
+                  ADA Title II Mandatory Transition.<br />Is your organization ready?
+                </p>
+              </div>
+            </FadeUp>
+
+            {/* Standards Grid */}
+            <FadeUp delay={0.2} style={{ display: "flex", flexDirection: "column" }}>
+              <div style={{
+                display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(max(200px, 40%), 1fr))", gap: "clamp(16px, 3vw, 24px)",
+                height: "100%", alignContent: "flex-start"
+              }}>
+                {[
+                  { label: "WCAG 2.1 AA", desc: "Core Web Content Accessibility Guidelines", bg: "var(--blue-dim)", border: "rgba(58,123,255,0.2)", color: "var(--trust)" },
+                  { label: "Section 508", desc: "Federal Rehabilitation Act compliance", bg: "var(--blue-dim)", border: "rgba(58,123,255,0.2)", color: "var(--trust)" },
+                  { label: "ADA Title II", desc: "Americans with Disabilities Act", bg: "var(--blue-dim)", border: "rgba(58,123,255,0.2)", color: "var(--trust)" },
+                  { label: "SOC 2 Type II", desc: "Enterprise Data Security Standard", bg: "var(--blue-dim)", border: "rgba(58,123,255,0.2)", color: "var(--trust)" },
+                ].map((std) => (
+                  <motion.div 
+                    key={std.label}
+                    whileHover={{ y: -4, boxShadow: "0 12px 24px rgba(10,42,102,0.06)" }}
+                    style={{
+                      background: "#fff", border: "1px solid var(--border-light)", borderRadius: 16,
+                      padding: "clamp(20px, 4vw, 28px) clamp(16px, 3vw, 24px)", display: "flex", flexDirection: "column", gap: 16,
+                      transition: "all 0.3s ease", cursor: "default"
+                    }}
+                  >
+                    <div style={{
+                      width: 44, height: 44, borderRadius: 12, background: std.bg, border: `1px solid ${std.border}`,
+                      display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0
+                    }}>
+                      <IconCheck size={18} color={std.color} />
+                    </div>
+                    <div>
+                      <h4 style={{ fontSize: "clamp(15px, 3vw, 16px)", fontWeight: 700, color: "var(--text-dark)", marginBottom: 6 }}>{std.label}</h4>
+                      <p style={{ fontSize: "clamp(13px, 2.5vw, 14px)", color: "var(--text-dark-sub)", lineHeight: 1.5, marginBottom: 0 }}>{std.desc}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </FadeUp>
+
+          </div>
         </div>
       </section>
 
