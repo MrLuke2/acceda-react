@@ -599,7 +599,11 @@ function ScannerViz() {
           onMouseOver={e => e.currentTarget.style.background = "rgba(255,255,255,0.12)"}
           onMouseOut={e => e.currentTarget.style.background = "rgba(255,255,255,0.06)"}
         >
-          {isPaused ? "▶ RESUME" : "II PAUSE"}
+          {isPaused ? (
+            <><span aria-hidden="true" style={{ marginRight: 4 }}>▶</span>RESUME</>
+          ) : (
+            <><span aria-hidden="true" style={{ marginRight: 4 }}>II</span>PAUSE</>
+          )}
         </button>
         <span style={{
           marginLeft: 12, width: 7, height: 7, borderRadius: "50%",
