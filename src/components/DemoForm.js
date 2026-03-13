@@ -82,7 +82,7 @@ export default function DemoForm() {
         <div key={f.name} style={{ display: "flex", flexDirection: "column", gap: 6 }}>
           <label
             htmlFor={f.name}
-            style={{ fontSize: "0.75rem", fontWeight: 500, color: "var(--gray-2)", letterSpacing: "0.04em" }}
+            style={{ fontSize: "0.75rem", fontWeight: 500, color: "var(--text-secondary)", letterSpacing: "0.04em" }}
           >
             {f.label}
             {f.required && <span style={{ color: "var(--teal)", marginLeft: 3 }}>*</span>}
@@ -101,14 +101,13 @@ export default function DemoForm() {
             onChange={handle}
             style={{
               background: "rgba(255,255,255,0.04)",
-              border: `1px solid ${errors[f.name] ? "#FF4D6A" : "var(--gray-3)"}`,
+              border: `1px solid ${errors[f.name] ? "var(--accent-red)" : "var(--border-hi)"}`,
               borderRadius: 8,
               padding: "11px 14px",
               fontSize: "0.875rem",
               color: "var(--white)",
               fontFamily: "var(--font-body)",
-              outline: "none",
-              transition: "border-color 0.2s",
+              transition: "border-color 0.2s, box-shadow 0.2s",
               width: "100%",
             }}
             onFocus={e => { e.target.style.borderColor = errors[f.name] ? "#FF4D6A" : "var(--blue)"; }}

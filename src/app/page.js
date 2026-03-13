@@ -23,7 +23,7 @@ const FontLoader = () => (
       --electric:      #3A7BFF;   /* Electric Blue */
       --yellow:        #FFC247;   /* Accessibility Yellow */
       --soft-gray:     #F4F6F8;   /* Soft Gray — light sections */
-      --ui-gray:       #6B7280;   /* UI Gray */
+      --ui-gray:       #AAB4C2;   /* UI Gray — accessible for non-text contrast on navy */
 
       /* ── Semantic surface tokens ── */
       --surface-dark:    #0C1F4A;
@@ -50,8 +50,8 @@ const FontLoader = () => (
 
       /* ── Text tokens ── */
       --text-primary:    #FFFFFF;
-      --text-secondary:  #94A3B8;
-      --text-muted:      #475569;
+      --text-secondary:  #CBD5E1;   /* Light Slate — high-contrast secondary text */
+      --text-muted:      #94A3B8;   /* Muted — meets contrast for large text */
       --text-dark:       #0F1729;
       --text-dark-sub:   #374151;
 
@@ -514,12 +514,14 @@ const ALL_FINDINGS = [
 const SEV_COLOR = { critical: "#FF4D6A", high: "#FFAA2C", medium: "#3A7BFF" };
 
 function ScannerViz() {
+  const [isPaused, setIsPaused] = useState(false);
   const [findings, setFindings] = useState([]);
   const [resolved, setResolved] = useState(0);
   const [scanning, setScanning] = useState(false);
   const [done, setDone] = useState(false);
 
   useEffect(() => {
+    if (isPaused) return;
     let cancelled = false;
     const timeouts = [];
     const T = (fn, ms) => { const id = setTimeout(() => { if (!cancelled) fn(); }, ms); timeouts.push(id); };
@@ -535,7 +537,7 @@ function ScannerViz() {
     };
     runCycle();
     return () => { cancelled = true; timeouts.forEach(clearTimeout); };
-  }, []);
+  }, [isPaused]);
 
   return (
     <div
@@ -559,11 +561,24 @@ function ScannerViz() {
         <span style={{ marginLeft: 12, fontSize: 11.5, color: "rgba(255,255,255,0.4)", fontFamily: "var(--font-mono)", letterSpacing: "0.04em" }}>
           ACCEDA — audit · {done ? "complete" : scanning ? "scanning..." : "remediating..."}
         </span>
+        <button
+          onClick={() => setIsPaused(!isPaused)}
+          aria-label={isPaused ? "Resume scan animation" : "Pause scan animation"}
+          style={{
+            background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)",
+            borderRadius: 6, color: "#fff", fontSize: 10, cursor: "pointer",
+            padding: "4px 8px", fontFamily: "var(--font-mono)", transition: "background 0.2s"
+          }}
+          onMouseOver={e => e.currentTarget.style.background = "rgba(255,255,255,0.12)"}
+          onMouseOut={e => e.currentTarget.style.background = "rgba(255,255,255,0.06)"}
+        >
+          {isPaused ? "▶ RESUME" : "II PAUSE"}
+        </button>
         <span style={{
           marginLeft: "auto", width: 7, height: 7, borderRadius: "50%",
-          background: done ? "#10B26C" : scanning ? "#FFAA2C" : "#1F4FD8",
-          boxShadow: `0 0 0 3px ${done ? "rgba(16,178,108,0.2)" : scanning ? "rgba(255,170,44,0.2)" : "rgba(31,79,216,0.2)"}`,
-          animation: done ? "none" : "pulse-ring 1.5s ease-out infinite",
+          background: done ? "#10B26C" : (scanning && !isPaused) ? "#FFAA2C" : "#1F4FD8",
+          boxShadow: `0 0 0 3px ${done ? "rgba(16,178,108,0.2)" : (scanning && !isPaused) ? "rgba(255,170,44,0.2)" : "rgba(31,79,216,0.2)"}`,
+          animation: (done || isPaused) ? "none" : "pulse-ring 1.5s ease-out infinite",
         }}/>
       </div>
 
@@ -748,7 +763,7 @@ function AnimatedNumber({ target, suffix = "", duration = 1500, trigger = true }
     }
   }, [trigger]);
 
-  return <span ref={ref}>{display}{suffix}</span>;
+  return <span ref={ref} aria-live="polite">{display}{suffix}</span>;
 }
 
 // ─── Interactive Stat Card ──────────────────────────────────────────────────
@@ -1298,13 +1313,14 @@ export default function AccedaLandingPage() {
       <a href="#main-content" className="skip-link">Skip to main content</a>
       <div className="noise" aria-hidden="true" />
 
-      {/* ════════════════════════════════════════════════════════
-          NAVIGATION
-      ════════════════════════════════════════════════════════ */}
-      <nav aria-label="Main navigation" className={`nav ${navScrolled ? "scrolled" : ""}`}>
+      <main id="main-content">
+        {/* ════════════════════════════════════════════════════════
+            NAVIGATION
+        ════════════════════════════════════════════════════════ */}
+        <nav aria-label="Main navigation" className={`nav ${navScrolled ? "scrolled" : ""}`}>
         <a href="#" className="nav-logo" onClick={() => setMobileMenuOpen(false)}
            aria-label="Acceda — return to top">
-          <Image src={accedaLogo} alt="ACCEDA — Compliance-Ready Accessibility Platform" height={52} priority style={{ width: "auto" }} />
+          <Image src={accedaLogo} alt="ACCEDA — AI-Powered Accessibility Compliance Platform" height={52} priority style={{ width: "auto" }} />
         </a>
 
         <ul className={`nav-links ${mobileMenuOpen ? "open" : ""}`}>
@@ -1397,7 +1413,7 @@ export default function AccedaLandingPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.36 }}
               >
-                ACCEDA is a Compliance-Ready Accessibility Platform that automatically detects, fixes, and documents WCAG 2.1 AA, Section 508, and ADA Title II violations for enterprise software teams.
+                ACCEDA is an AI-powered accessibility compliance platform that automatically detects, fixes, and documents WCAG 2.1 AA, Section 508, and ADA Title II violations for enterprise software teams.
               </motion.p>
 
               <motion.div
@@ -1718,6 +1734,46 @@ export default function AccedaLandingPage() {
           </FadeUp>
         </div>
       </section>
+      
+      {/* ════════════════════════════════════════════════════════
+          FAQ SECTION — Critical for AEO / AI Search
+      ════════════════════════════════════════════════════════ */}
+      <section id="faq" aria-labelledby="faq-heading" style={{ padding: "80px 0", background: "var(--surface-cream)", borderBottom: "1px solid var(--border-light)" }}>
+        <div className="container" style={{ maxWidth: 800 }}>
+          <div style={{ textAlign: "center", marginBottom: 52 }}>
+            <div className="eyebrow" style={{ color: "var(--navy)", justifyContent: "center" }}>Support</div>
+            <h2 id="faq-heading" style={{ 
+              fontFamily: "var(--font-display)", fontSize: "clamp(26px, 4vw, 42px)", 
+              fontWeight: 800, color: "var(--text-dark)", letterSpacing: "-0.03em" 
+            }}>
+              Frequently Asked Questions
+            </h2>
+          </div>
+          
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            {faqs.map((f, i) => (
+              <details key={i} style={{ 
+                background: "#fff", border: "1px solid var(--border-light)", 
+                borderRadius: 12, padding: "20px 24px", cursor: "pointer" 
+              }}>
+                <summary style={{ 
+                  fontSize: 16.5, fontWeight: 700, color: "var(--text-dark)", 
+                  listStyle: "none", outline: "none", display: "flex", justifyContent: "space-between", alignItems: "center"
+                }}>
+                  {f.q}
+                  <span style={{ color: "var(--accent-primary)", fontSize: 20 }}>+</span>
+                </summary>
+                <p style={{ 
+                  marginTop: 16, fontSize: 15, lineHeight: 1.6, 
+                  color: "var(--text-dark-sub)", maxWidth: "90%" 
+                }}>
+                  {f.a}
+                </p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* ════════════════════════════════════════════════════════
           CTA — Deep dark with full brand drama
@@ -1784,6 +1840,7 @@ export default function AccedaLandingPage() {
       {/* ════════════════════════════════════════════════════════
           FOOTER
       ════════════════════════════════════════════════════════ */}
+      </main>
       <footer style={{ position: "relative", overflow: "hidden", background: "var(--surface-darker)", borderTop: "1px solid var(--border)", padding: "52px 0" }}>
         <div className="grid-bg" aria-hidden="true" style={{ opacity: 0.04 }} />
         {/* Subtle footer glows */}
@@ -1797,7 +1854,7 @@ export default function AccedaLandingPage() {
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 32 }}>
             <div style={{ maxWidth: 320 }}>
               <a href="#" className="nav-logo" style={{ display: "inline-block", marginBottom: 18 }}>
-                <Image src={accedaLogo} alt="Acceda logo" height={38} style={{ width: "auto" }} />
+                <Image src={accedaLogo} alt="ACCEDA logo" height={38} style={{ width: "auto" }} />
               </a>
               <p style={{ fontSize: 13, lineHeight: 1.65, color: "var(--text-secondary)", marginBottom: 0 }}>
                 ACCEDA is a trusted compliance partner for enterprise engineering teams. We automate digital accessibility to ensure WCAG 2.1 AA, Section 508, and ADA Title II conformance across large product portfolios.
