@@ -1555,7 +1555,7 @@ export default function AccedaLandingPage() {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.55, delay: 0.6 }}
               >
-                {["WCAG 2.2 AA", "Section 508", "ADA Title II", "SOC 2 Type II"].map(b => (
+                {["WCAG 2.1 AA", "Section 508", "ADA Title II", "SOC 2 Type II"].map(b => (
                   <span key={b} className="badge badge-green">{b}</span>
                 ))}
               </motion.div>
@@ -1893,7 +1893,7 @@ export default function AccedaLandingPage() {
                   aria-label="Compliance certifications"
                 >
                   {[
-                    { label: "WCAG 2.2 AA",    aria: null },
+                    { label: "WCAG 2.1 AA",    aria: null },
                     { label: "Section 508",    aria: null },
                     { label: "ADA Title II",   aria: null },
                     { label: "SOC 2 Type II",  aria: "SOC 2 Type II certified for enterprise security" },
