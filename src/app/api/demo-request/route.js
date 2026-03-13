@@ -12,8 +12,8 @@ export async function POST(req) {
 
   try {
     await resend.emails.send({
-      from: "ACCEDA Leads <leads@useacceda.com>",
-      to: "mr.n.luke@gmail.com",          // ← YOUR email here
+      from: `ACCEDA Leads <${process.env.FROM_EMAIL}>`,
+      to: process.env.LEAD_RECEIVER_EMAIL,
       subject: `New Demo Request — ${company}`,
       html: `
         <div style="font-family: sans-serif; max-width: 480px; padding: 32px;">

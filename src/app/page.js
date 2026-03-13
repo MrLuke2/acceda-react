@@ -1458,7 +1458,7 @@ export default function AccedaLandingPage() {
 
         <div className={`nav-cta ${mobileMenuOpen ? "open" : ""}`}>
           <a href="#cta" className="btn-ghost">Sign Up</a>
-          <a href="https://cal.com/acceda/demo" target="_blank" rel="noopener noreferrer" className="btn-primary">
+          <a href={process.env.NEXT_PUBLIC_CAL_DEMO_URL} target="_blank" rel="noopener noreferrer" className="btn-primary">
             Request Demo <IconArrow />
           </a>
         </div>
@@ -1541,7 +1541,7 @@ export default function AccedaLandingPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.55, delay: 0.48 }}
               >
-                <a href="https://cal.com/acceda/demo" target="_blank" rel="noopener noreferrer"
+                <a href={process.env.NEXT_PUBLIC_CAL_DEMO_URL} target="_blank" rel="noopener noreferrer"
                    className="btn-primary btn-primary-lg">
                   Request an Enterprise Trial <IconArrow />
                 </a>

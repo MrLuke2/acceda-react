@@ -7,16 +7,16 @@ export const metadata = {
   description: "Acceda uses AI to scan, fix, and verify WCAG 2.1 AA, Section 508, and ADA Title II compliance across your entire digital product. Auto-generate VPATs, integrate CI/CD gates, and ship accessible software faster. Trusted by enterprise teams.",
   keywords: "web accessibility compliance, WCAG 2.1 AA, Section 508 compliance, ADA Title II, accessibility audit tool, VPAT generator, AI accessibility, enterprise accessibility platform, automated accessibility testing",
   alternates: {
-    canonical: "https://useacceda.com/",
+    canonical: process.env.NEXT_PUBLIC_APP_URL + "/",
   },
   openGraph: {
     type: "website",
-    url: "https://useacceda.com/",
+    url: process.env.NEXT_PUBLIC_APP_URL + "/",
     title: "Acceda — AI-Powered Accessibility Compliance",
     description: "From scan to fix to legal evidence. AI-driven accessibility compliance for enterprise engineering and compliance teams.",
     siteName: "Acceda",
     images: [{
-      url: "https://useacceda.com/og-image.png",
+      url: process.env.NEXT_PUBLIC_APP_URL + "/og-image.png",
       width: 1200,
       height: 630,
       alt: "Acceda platform screenshot showing accessibility scan results and AI-generated code fixes",
@@ -29,7 +29,7 @@ export const metadata = {
     title: "Acceda — AI-Powered Accessibility Compliance",
     description: "AI scans, fixes, and verifies WCAG compliance across your entire product stack. Build accessible, ship confidently.",
     images: [{
-      url: "https://useacceda.com/og-image.png",
+      url: process.env.NEXT_PUBLIC_APP_URL + "/og-image.png",
       alt: "Acceda accessibility compliance platform",
     }],
   },
@@ -54,10 +54,10 @@ export default function RootLayout({ children }) {
     "@type": "Organization",
     "name": "Acceda",
     "alternateName": "useacceda",
-    "url": "https://useacceda.com",
+    "url": process.env.NEXT_PUBLIC_APP_URL,
     "logo": {
       "@type": "ImageObject",
-      "url": "https://useacceda.com/_next/static/media/acceda_logo_2.f0668e08.svg",
+      "url": `${process.env.NEXT_PUBLIC_APP_URL}/_next/static/media/acceda_logo_2.f0668e08.svg`,
       "width": 200,
       "height": 60
     },
@@ -70,7 +70,7 @@ export default function RootLayout({ children }) {
     "contactPoint": {
       "@type": "ContactPoint",
       "contactType": "sales",
-      "url": "https://cal.com/acceda/demo",
+      "url": process.env.NEXT_PUBLIC_CAL_DEMO_URL,
       "availableLanguage": "English"
     },
     "knowsAbout": [
@@ -90,11 +90,11 @@ export default function RootLayout({ children }) {
     "name": "Acceda",
     "applicationCategory": "BusinessApplication",
     "operatingSystem": "Web",
-    "url": "https://useacceda.com",
+    "url": process.env.NEXT_PUBLIC_APP_URL,
     "description": "AI-powered accessibility compliance platform for enterprise teams. Automated WCAG scanning, code-level remediation, VPAT generation, and CI/CD integration.",
     "offers": {
       "@type": "Offer",
-      "url": "https://cal.com/acceda/demo",
+      "url": process.env.NEXT_PUBLIC_CAL_DEMO_URL,
       "description": "Enterprise pricing — request a demo"
     },
     "featureList": [
@@ -179,12 +179,12 @@ export default function RootLayout({ children }) {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "Acceda",
-    "url": "https://useacceda.com",
+    "url": process.env.NEXT_PUBLIC_APP_URL,
     "potentialAction": {
       "@type": "SearchAction",
       "target": {
         "@type": "EntryPoint",
-        "urlTemplate": "https://useacceda.com/?q={search_term_string}"
+        "urlTemplate": `${process.env.NEXT_PUBLIC_APP_URL}/?q={search_term_string}`
       },
       "query-input": "required name=search_term_string"
     }
