@@ -170,7 +170,7 @@ const FontLoader = () => (
     }
 
     /* ─────────────────────── LAYOUT ─────────────────────── */
-    .container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+    .container { max-width: 1160px; margin: 0 auto; padding: 0 clamp(16px, 5vw, 24px); }
 
     /* ─────────────────────── SECTION TYPOGRAPHY ─────────────────────── */
     .eyebrow {
@@ -216,20 +216,20 @@ const FontLoader = () => (
 
     /* ─────────────────────── CARDS ─────────────────────── */
     .stat-card {
-      border-radius: 14px; padding: 32px 28px;
+      border-radius: 14px; padding: clamp(20px, 5vw, 32px) clamp(16px, 4vw, 28px);
       transition: border-color 0.3s, transform 0.2s;
       border: 1px solid var(--border);
     }
     .stat-card:hover { transform: translateY(-2px); }
     .stat-num {
-      font-family: var(--font-display); font-size: 48px; font-weight: 800;
+      font-family: var(--font-display); font-size: clamp(32px, 5vw, 48px); font-weight: 800;
       letter-spacing: -0.05em; line-height: 1;
     }
     .stat-label { font-size: 13.5px; color: var(--text-secondary); margin-top: 8px; line-height: 1.5; }
 
     .feature-card {
       background: var(--surface-card); border: 1px solid var(--border);
-      border-radius: 14px; padding: 32px;
+      border-radius: 14px; padding: clamp(20px, 5vw, 32px);
       transition: border-color 0.3s, transform 0.25s, background 0.3s;
       position: relative; overflow: hidden; height: 100%;
     }
@@ -259,7 +259,7 @@ const FontLoader = () => (
     /* Light-background feature card */
     .feature-card-light {
       background: #fff; border: 1px solid var(--border-light);
-      border-radius: 14px; padding: 32px;
+      border-radius: 14px; padding: clamp(20px, 5vw, 32px);
       transition: border-color 0.3s, transform 0.25s, box-shadow 0.3s;
       position: relative; overflow: hidden; height: 100%;
       box-shadow: 0 4px 16px rgba(10,42,102,0.05);
@@ -288,7 +288,7 @@ const FontLoader = () => (
     .feature-body-light { font-size: 13.5px; line-height: 1.7; color: var(--text-dark-sub); }
 
     .persona-card {
-      border: 1px solid var(--border-light); border-radius: 14px; padding: 36px;
+      border: 1px solid var(--border-light); border-radius: 14px; padding: clamp(24px, 6vw, 36px);
       background: #fff; box-shadow: 0 4px 16px rgba(10,42,102,0.05);
       transition: border-color 0.3s, box-shadow 0.3s, transform 0.25s;
       position: relative; overflow: hidden; height: 100%;
@@ -446,7 +446,7 @@ const FontLoader = () => (
       .hero-btns, .compliance-badges { justify-content: center; }
       .logo-row { gap: 24px; }
       .stat-card { padding: 24px; }
-      .urgency-banner { flex-direction: column; text-align: center; }
+      .urgency-banner { flex-direction: column; text-align: center; gap: 8px; padding: 14px 16px; }
     }
   `}</style>
 );
@@ -551,9 +551,9 @@ function ScannerViz() {
     >
       {/* Title bar */}
       <div style={{
-        background: "rgba(10,42,102,0.8)", padding: "12px 18px",
+        background: "rgba(10,42,102,0.8)", padding: "clamp(10px, 3vw, 14px) clamp(12px, 4vw, 20px)",
         borderBottom: "1px solid rgba(255,255,255,0.07)",
-        display: "flex", alignItems: "center", gap: 8,
+        display: "flex", alignItems: "center", gap: "clamp(6px, 2vw, 10px)",
       }}>
         {["#FF4D6A","#FFAA2C","#10B26C"].map((c, i) => (
           <span key={i} style={{ width: 10, height: 10, borderRadius: "50%", background: c, display: "block" }}/>
@@ -583,9 +583,9 @@ function ScannerViz() {
       </div>
 
       {/* Target */}
-      <div style={{ padding: "14px 18px", borderBottom: "1px solid rgba(255,255,255,0.06)", position: "relative", overflow: "hidden", minHeight: 52 }}>
-        <div style={{ fontSize: 11, color: "rgba(255,255,255,0.3)", marginBottom: 4, fontFamily: "var(--font-mono)" }}>Target</div>
-        <div style={{ fontSize: 13, color: "rgba(255,255,255,0.85)", fontWeight: 500, fontFamily: "var(--font-mono)" }}>useacceda.com/portal</div>
+      <div style={{ padding: "clamp(12px, 4vw, 16px) clamp(12px, 4vw, 20px)", borderBottom: "1px solid rgba(255,255,255,0.06)", position: "relative", overflow: "hidden", minHeight: 52 }}>
+        <div style={{ fontSize: 10, color: "rgba(255,255,255,0.3)", marginBottom: 4, fontFamily: "var(--font-mono)" }}>Target</div>
+        <div style={{ fontSize: "clamp(12px, 3.5vw, 14px)", color: "rgba(255,255,255,0.85)", fontWeight: 500, fontFamily: "var(--font-mono)", wordBreak: "break-all" }}>useacceda.com/portal</div>
         {scanning && (
           <div style={{
             position: "absolute", left: 0, right: 0, top: 0, height: 2,
@@ -596,7 +596,7 @@ function ScannerViz() {
       </div>
 
       {/* Findings */}
-      <div style={{ padding: "16px 18px", minHeight: 210, maxHeight: 210, overflowY: "hidden" }}>
+      <div style={{ padding: "clamp(12px, 4vw, 16px) clamp(12px, 4vw, 20px)", minHeight: 210, maxHeight: 210, overflowY: "hidden" }}>
         {findings.length === 0 && (
           <div style={{ fontSize: 12, color: "rgba(255,255,255,0.25)", paddingTop: 8, fontFamily: "var(--font-mono)" }}>
             Initializing scan engine...
@@ -637,7 +637,7 @@ function ScannerViz() {
 
       {/* Progress bar */}
       <div style={{
-        padding: "12px 18px", borderTop: "1px solid rgba(255,255,255,0.06)",
+        padding: "clamp(10px, 3vw, 12px) clamp(12px, 4vw, 20px)", borderTop: "1px solid rgba(255,255,255,0.06)",
         background: "rgba(10,42,102,0.6)", display: "flex", alignItems: "center", gap: 14,
       }}>
         <div style={{ flex: 1, height: 3, background: "rgba(255,255,255,0.06)", borderRadius: 2, overflow: "hidden" }}>
@@ -1461,7 +1461,8 @@ export default function AccedaLandingPage() {
                   top: -85,
                   left: "50%",
                   transform: "translateX(-50%)",
-                  width: "max-content",
+                  width: "calc(100% - 32px)",
+                  maxWidth: 440,
                   zIndex: 10,
                   backdropFilter: "blur(12px)",
                   boxShadow: "0 10px 40px rgba(0,0,0,0.3)",
@@ -1473,7 +1474,7 @@ export default function AccedaLandingPage() {
                   <span style={{ fontSize: 13, color: "var(--yellow)", fontWeight: 600 }}>
                     ADA Title II deadline:
                   </span>
-                  <span style={{ fontSize: 12.5, color: "rgba(255,255,255,0.85)" }}>
+                  <span style={{ fontSize: 12.5, color: "rgba(255,255,255,0.85)", lineHeight: 1.4 }}>
                     April 24, 2026 — organizations must comply with WCAG 2.1 AA
                   </span>
                 </div>
@@ -1515,9 +1516,9 @@ export default function AccedaLandingPage() {
       {/* ════════════════════════════════════════════════════════
           STATS — Light section (Soft Gray) — SECTION RHYTHM BREAK
       ════════════════════════════════════════════════════════ */}
-      <section style={{ background: "var(--surface-light)", padding: "100px 0" }} aria-label="Platform statistics">
+      <section style={{ background: "var(--surface-light)", padding: "clamp(60px, 10vw, 100px) 0" }} aria-label="Platform statistics">
         <div className="container">
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }} role="list">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 20 }} role="list">
             {stats.map((s, i) => (
               <FadeUp key={i} delay={i * 0.12} style={{ height: "100%" }}>
                 <InteractiveStatCard {...s} />
@@ -1573,7 +1574,7 @@ export default function AccedaLandingPage() {
       ════════════════════════════════════════════════════════ */}
       <section
         id="platform"
-        style={{ padding: "120px 0", background: "var(--surface-cream)" }}
+        style={{ padding: "clamp(80px, 12vw, 120px) 0", background: "var(--surface-cream)" }}
         aria-labelledby="platform-heading"
       >
         <div className="container">
@@ -1590,7 +1591,7 @@ export default function AccedaLandingPage() {
             </div>
           </FadeUp>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: 16 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 16 }}>
             {features.map((f, i) => (
               <FadeUp key={i} delay={i * 0.07} style={{ height: "100%" }}>
                 <InteractiveFeatureCard icon={f.icon} title={f.title} body={f.body} />
@@ -1605,7 +1606,7 @@ export default function AccedaLandingPage() {
       ════════════════════════════════════════════════════════ */}
       <section
         id="use-cases"
-        style={{ padding: "110px 0", background: "var(--surface-dark)", borderTop: "1px solid var(--border)" }}
+        style={{ padding: "clamp(80px, 12vw, 110px) 0", background: "var(--surface-dark)", borderTop: "1px solid var(--border)" }}
         aria-labelledby="personas-heading"
       >
         <div className="container">
@@ -1617,7 +1618,7 @@ export default function AccedaLandingPage() {
               </h2>
             </div>
           </FadeUp>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: 20 }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: 20 }}>
             {personas.map((p, i) => (
               <FadeUp key={i} delay={i * 0.1} style={{ height: "100%" }}>
                 <InteractivePersonaCard role={p.role} title={p.title} body={p.body} index={i} />
@@ -1682,7 +1683,7 @@ export default function AccedaLandingPage() {
                   marginTop: 28,
                   background: "var(--yellow-dim)",
                   border: "1px solid var(--border-yellow)",
-                  borderRadius: 14, padding: "20px 24px",
+                  borderRadius: 14, padding: "clamp(16px, 5vw, 24px) clamp(12px, 4vw, 24px)",
                   display: "flex", flexDirection: "column", gap: 14, alignItems: "center",
                   textAlign: "center"
                 }}>
@@ -1696,7 +1697,8 @@ export default function AccedaLandingPage() {
                     <CountdownClock targetDate="2026-04-24T00:00:00" large numberColor="#000" />
                   </div>
                   <div style={{ 
-                    fontSize: 15.5, color: "var(--trust)", opacity: 1, fontWeight: 500,
+                    fontSize: "clamp(14px, 4vw, 16px)", color: "var(--trust)", opacity: 1, fontWeight: 500,
+                    lineHeight: 1.4, overflowWrap: "break-word"
                   }}>
                     ADA Title II Mandatory Compliance Transition
                   </div>
@@ -1742,7 +1744,7 @@ export default function AccedaLandingPage() {
       ════════════════════════════════════════════════════════ */}
       <section
         id="cta"
-        style={{ position: "relative", overflow: "hidden", padding: "100px 0", background: "var(--surface-darker)" }}
+        style={{ position: "relative", overflow: "hidden", padding: "clamp(80px, 10vw, 100px) 0", background: "var(--surface-darker)" }}
         aria-labelledby="cta-heading"
       >
         <div className="grid-bg" aria-hidden="true" />
