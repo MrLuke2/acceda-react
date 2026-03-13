@@ -436,14 +436,14 @@ const FontLoader = () => (
     @media (max-width: 1024px) {
       .hero-wrapper   { flex-direction: column; text-align: center; gap: 80px !important; }
       .hero-content   { align-items: center; }
-      .hero-scanner   { flex: 1 !important; width: 100%; max-width: 480px; align-self: center; margin-top: 60px; }
+      .hero-scanner   { flex: 1 !important; width: 100%; max-width: 480px; align-self: center; margin-top: 110px !important; }
       .problem-wrapper { flex-direction: column; gap: 50px !important; text-align: center; }
       .compliance-wrapper { flex-direction: column; gap: 40px !important; text-align: center; padding: 40px 32px !important; }
     }
 
     @media (max-width: 768px) {
       .mobile-menu-btn { display: block; }
-      .nav { padding: 0 20px; flex-wrap: wrap; height: auto; min-height: 68px; }
+      .nav { padding: 12px 20px; flex-wrap: wrap; height: auto; min-height: 80px; }
       .nav-links {
         display: none; flex-direction: column; width: 100%;
         padding: 20px 0; gap: 20px; border-top: 1px solid var(--border); margin-top: 10px;
@@ -1329,7 +1329,7 @@ export default function AccedaLandingPage() {
         {/* ════════════════════════════════════════════════════════
             NAVIGATION
         ════════════════════════════════════════════════════════ */}
-        <nav aria-label="Main navigation" className={`nav ${navScrolled ? "scrolled" : ""}`}>
+        <nav aria-label="Main navigation" className={`nav ${navScrolled || mobileMenuOpen ? "scrolled" : ""}`}>
         <a href="#" className="nav-logo" onClick={() => setMobileMenuOpen(false)}
            aria-label="Acceda — return to top">
           <Image src={accedaLogo} alt="ACCEDA — AI-Powered Accessibility Compliance Platform" height={52} priority style={{ width: "auto" }} />
