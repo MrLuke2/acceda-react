@@ -450,6 +450,23 @@ const FontLoader = () => (
       display: none; background: transparent; border: none;
       color: #fff; cursor: pointer; padding: 8px;
     }
+    .mobile-demo-btn {
+      display: none;
+      padding: 8px 14px;
+      font-size: 13px;
+      margin-left: auto;
+      margin-right: 8px;
+      white-space: nowrap;
+      opacity: 0;
+      transform: translateY(-5px);
+      transition: opacity 0.3s, transform 0.3s;
+      pointer-events: none;
+    }
+    .mobile-demo-btn.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
 
     @media (max-width: 1024px) {
       .hero-wrapper   { flex-direction: column; text-align: center; gap: 80px !important; }
@@ -461,6 +478,7 @@ const FontLoader = () => (
 
     @media (max-width: 768px) {
       .mobile-menu-btn { display: block; }
+      .mobile-demo-btn { display: inline-flex; }
       .nav { padding: 12px 20px; flex-wrap: wrap; height: auto; min-height: 80px; }
       .nav-links {
         display: none; flex-direction: column; width: 100%;
@@ -1413,7 +1431,7 @@ const personas = [
 
 const stats = [
   { num: 97,  suffix: "%", label: "of WCAG violations detected — vs. 30–40% with legacy tools", color: "var(--electric)", bg: "rgba(58,123,255,0.06)",  border: "rgba(58,123,255,0.15)" },
-  { num: 12,  suffix: "x", label: "faster remediation with AI-curated code fix guides",        color: "var(--green)",    bg: "rgba(16,178,108,0.06)",  border: "rgba(16,178,108,0.15)" },,
+  { num: 12,  suffix: "x", label: "faster remediation with AI-curated code fix guides",        color: "var(--green)",    bg: "rgba(16,178,108,0.06)",  border: "rgba(16,178,108,0.15)" },
   { num: 100, suffix: "+", label: "enterprise teams protecting compliance posture with ACCEDA",   color: "var(--yellow)",   bg: "rgba(255,194,71,0.06)",  border: "rgba(255,194,71,0.18)" },
 ];
 
@@ -1430,6 +1448,8 @@ export default function AccedaLandingPage() {
   const [navScrolled, setNavScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { scrollY } = useScroll();
+  const heroCtaRef = useRef(null);
+  const isHeroCtaInView = useInView(heroCtaRef, { amount: 0.1 });
 
   useEffect(() => {
     const unsub = scrollY.on("change", v => setNavScrolled(v > 40));
@@ -1450,6 +1470,16 @@ export default function AccedaLandingPage() {
         <a href="#" className="nav-logo" onClick={() => setMobileMenuOpen(false)}
            aria-label="Acceda — return to top">
           <Image src={accedaLogo} alt="ACCEDA — AI-Powered Accessibility Compliance Platform" height={52} priority style={{ width: "auto" }} />
+        </a>
+
+        {/* Mobile Sticky CTA */}
+        <a 
+          href={process.env.NEXT_PUBLIC_CAL_DEMO_URL} 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className={`btn-primary mobile-demo-btn ${!isHeroCtaInView && navScrolled && !mobileMenuOpen ? 'visible' : ''}`}
+        >
+          Request Demo 
         </a>
 
         <ul className={`nav-links ${mobileMenuOpen ? "open" : ""}`}>
@@ -1545,6 +1575,7 @@ export default function AccedaLandingPage() {
               </motion.p>
 
               <motion.div
+                ref={heroCtaRef}
                 className="hero-btns"
                 style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 44 }}
                 initial={{ opacity: 0, y: 16 }}
