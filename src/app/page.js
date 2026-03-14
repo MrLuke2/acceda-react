@@ -86,6 +86,11 @@ const FontLoader = () => (
       border-radius: 0 0 6px 6px; font-family: var(--font-body);
     }
     .skip-link:focus { top: 0; }
+    
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border-width: 0;
+    }
 
     /* ── Focus rings ── */
     *:focus-visible {
@@ -794,7 +799,12 @@ function AnimatedNumber({ target, suffix = "", duration = 1500, trigger = true }
     }
   }, [trigger]);
 
-  return <span ref={ref} aria-live="polite">{display}{suffix}</span>;
+  return (
+    <span ref={ref}>
+      <span className="sr-only">{target}{suffix}</span>
+      <span aria-hidden="true">{display}{suffix}</span>
+    </span>
+  );
 }
 
 // ─── Interactive Stat Card ──────────────────────────────────────────────────
@@ -1555,7 +1565,7 @@ export default function AccedaLandingPage() {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.55, delay: 0.6 }}
               >
-                {["WCAG 2.1 AA", "Section 508", "ADA Title II", "SOC 2 Type II"].map(b => (
+                {["WCAG 2.1 AA", "Section 508", "ADA Title II", "SOC 2 Type I"].map(b => (
                   <span key={b} className="badge badge-green">{b}</span>
                 ))}
               </motion.div>
@@ -1836,7 +1846,7 @@ export default function AccedaLandingPage() {
                   { label: "WCAG 2.1 AA", desc: "Core Web Content Accessibility Guidelines", bg: "var(--blue-dim)", border: "rgba(58,123,255,0.2)", color: "var(--trust)" },
                   { label: "Section 508", desc: "Federal Rehabilitation Act compliance", bg: "var(--blue-dim)", border: "rgba(58,123,255,0.2)", color: "var(--trust)" },
                   { label: "ADA Title II", desc: "Americans with Disabilities Act", bg: "var(--blue-dim)", border: "rgba(58,123,255,0.2)", color: "var(--trust)" },
-                  { label: "SOC 2 Type II", desc: "Enterprise Data Security Standard", bg: "var(--blue-dim)", border: "rgba(58,123,255,0.2)", color: "var(--trust)" },
+                  { label: "SOC 2 Type I", desc: "Enterprise Data Security Standard", bg: "var(--blue-dim)", border: "rgba(58,123,255,0.2)", color: "var(--trust)" },
                 ].map((std) => (
                   <InteractiveComplianceCard key={std.label} std={std} />
                 ))}
@@ -1896,7 +1906,7 @@ export default function AccedaLandingPage() {
                     { label: "WCAG 2.1 AA",    aria: null },
                     { label: "Section 508",    aria: null },
                     { label: "ADA Title II",   aria: null },
-                    { label: "SOC 2 Type II",  aria: "SOC 2 Type II certified for enterprise security" },
+                    { label: "SOC 2 Type I",  aria: "SOC 2 Type II certified for enterprise security" },
                   ].map(b => (
                     <li key={b.label} style={{ margin: 0 }}>
                       <span className="badge badge-yellow" aria-label={b.aria || undefined}>{b.label}</span>
