@@ -172,7 +172,7 @@ export default function PrivacyPolicy() {
             >
               <h2>How We Protect Your Data</h2>
               <p>
-                Acceda employs enterprise-grade security controls to safeguard your information, including end-to-end encryption for data in transit and at rest. We undergo regular SOC 2 Type II audits to verify the effectiveness of our security posture.
+                Acceda employs enterprise-grade security controls to safeguard your information, including end-to-end encryption for data in transit and at rest. We undergo regular SOC 2 Type I audits to verify the effectiveness of our security posture.
               </p>
               <p>
                 We do not sell your personal or organizational data to third parties. Our data processing is limited to providing and improving the Acceda platform.
