@@ -1469,7 +1469,7 @@ export default function AccedaLandingPage() {
         <nav aria-label="Main navigation" className={`nav ${navScrolled || mobileMenuOpen ? "scrolled" : ""}`}>
         <a href="#" className="nav-logo" onClick={() => setMobileMenuOpen(false)}
            aria-label="Acceda — return to top">
-          <Image src={accedaLogo} alt="ACCEDA — AI-Powered Accessibility Compliance Platform" height={52} priority style={{ width: "auto" }} />
+          <Image src={accedaLogo} alt="ACCEDA — AI-Powered Accessibility Compliance Platform" height={52} loading="eager" style={{ width: "auto" }} />
         </a>
 
         {/* Mobile Sticky CTA */}
@@ -1967,7 +1967,7 @@ export default function AccedaLandingPage() {
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: 32 }}>
             <div style={{ maxWidth: 320 }}>
               <a href="#" className="nav-logo" style={{ display: "inline-block", marginBottom: 18 }}>
-                <Image src={accedaLogo} alt="ACCEDA logo" height={38} style={{ width: "auto" }} />
+                <Image src={accedaLogo} alt="ACCEDA logo" height={38} loading="eager" style={{ width: "auto" }} />
               </a>
               <p style={{ fontSize: 13, lineHeight: 1.65, color: "var(--text-secondary)", marginBottom: 0 }}>
                 ACCEDA is a trusted compliance partner for enterprise engineering teams. We automate digital accessibility to ensure WCAG 2.1 AA, Section 508, and ADA Title II conformance across large product portfolios.

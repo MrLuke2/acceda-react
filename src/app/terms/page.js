@@ -121,7 +121,7 @@ export default function TermsOfService() {
 
       <nav className="nav" style={{ background: navScrolled ? "rgba(8,14,34,0.94)" : "rgba(8,14,34,0.7)", backdropFilter: "blur(12px)", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
         <a href="/" className="nav-logo">
-          <Image src={accedaLogo} alt="Acceda Logo" height={38} style={{ width: "auto" }} />
+          <Image src={accedaLogo} alt="Acceda Logo" height={38} loading="eager" style={{ width: "auto" }} />
         </a>
         <a href="/" className="btn-ghost" aria-label="Back to landing page">Back to Home</a>
       </nav>

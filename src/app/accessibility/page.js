@@ -132,7 +132,7 @@ export default function AccessibilityStatement() {
 
       <nav className="nav" style={{ background: navScrolled ? "rgba(8,14,34,0.94)" : "rgba(8,14,34,0.7)" }}>
         <a href="/" className="nav-logo">
-          <Image src={accedaLogo} alt="Acceda Logo" height={38} style={{ width: "auto" }} />
+          <Image src={accedaLogo} alt="Acceda Logo" height={38} loading="eager" style={{ width: "auto" }} />
         </a>
         <a href="/" className="btn-ghost" aria-label="Back to landing page">Back to Home</a>
       </nav>
